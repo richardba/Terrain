@@ -8,7 +8,7 @@
 #include "include/utils.h"
 #include "include/Terrain.h"
 
-// Constantes responsáveis pelo modo da câmera
+/* Constantes responsáveis pelo modo da câmera */
 #define FOLLOW          (0)
 #define OBSERVE         (1)
 #define DRIVE           (2)
@@ -90,10 +90,6 @@ void reduceToUnit(float vector[3])
     vector[GL_ONE] /= length;
     vector[2] /= length;
 }
-
-// ---------------------------------------------------------------------
-// Points p1, p2, & p3 specified in counter clock-wise order
-//
 
 /**
 * Método responsável pelo calculo das normais onde dado uma matriz de três posições se calcula dois vetores resultantes
@@ -220,7 +216,6 @@ void drawMode()
 */
 GLint roamInit(unsigned char *map)
 {
-    // Perform some bounds checking on the #define statements
     if ( glNumTrisDesired > POOL_SIZE )
         return -1;
 
@@ -253,7 +248,6 @@ GLint roamInit(unsigned char *map)
 
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
-// ----------- LANDSCAPE INITIALIZATION -----------
     glTerrain.Init(map);
 
     return GL_ZERO;
@@ -264,23 +258,16 @@ GLint roamInit(unsigned char *map)
 */
 void roamDrawFrame()
 {
-    // Perform all the functions needed to render one frame.
     glTerrain.Reset();
     glTerrain.Tessellate();
     glTerrain.Render();
 }
 
-// ---------------------------------------------------------------------
-// Draw a simplistic frustum for debug purposes.
-//
-/*
+/**
 * Método para renderização do Frustum
 */
 void drawFrustum()
 {
-    //
-    // Draw the camera eye & frustum
-    //
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_TEXTURE_GEN_S);
@@ -291,7 +278,6 @@ void drawFrustum()
 
     glBegin(GL_LINES);
 
-    // Draw the View Vector starting at the eye (red)
     glColor3f(GL_ONE, GL_ZERO, GL_ZERO);
     glVertex3f(	glViewPosition[GL_ZERO],
                 glViewPosition[GL_ONE],
@@ -302,7 +288,6 @@ void drawFrustum()
                 glViewPosition[2] - 50.0f * cosf( glPerspective * M_PI / 180.0f ));
 
 
-    // Draw the view frustum (green)
     glColor3f(GL_ZERO, GL_ONE, GL_ZERO);
     glVertex3f(	glViewPosition[GL_ZERO],
                 glViewPosition[GL_ONE],
@@ -320,7 +305,6 @@ void drawFrustum()
                 glViewPosition[GL_ONE],
                 glViewPosition[2] - 1000.0f * cosf( (glPerspective+45.0f) * M_PI / 180.0f ));
 
-    // Draw the clipping planes behind the eye (yellow)
     const float PI_DIV_180 = M_PI / 180.0f;
     const float FOV_DIV_2 = glFoVX/2;
 
@@ -375,16 +359,15 @@ void mouseWheel(GLint button, GLint dir, GLint x, GLint y)
     return;
 }
 
-// ---------------------------------------------------------------------
-// Key Binding Functions
-//
+/**
+*
+*/
 void cameraMode(void)
 {
     glCamera++;
     if ( glCamera > FLY_MODE )
         glCamera = FOLLOW;
 
-    // Turn animation back on...
     if (glCamera == FOLLOW)
         glAnimate = GL_ONE;
 }
@@ -398,6 +381,9 @@ void renderMode(void)
     drawMode( );
 }
 
+/**
+*
+*/
 void KeyForward(void)
 {
     switch ( glCamera )
@@ -433,12 +419,18 @@ void KeyForward(void)
     }
 }
 
+/**
+*
+*/
 void KeyLeft(void)
 {
     if ( glCamera == OBSERVE )
         glCameraRotation[GL_ONE] -= 5.0f;
 }
 
+/**
+*
+*/
 void KeyBackward(void)
 {
     switch ( glCamera )
@@ -474,6 +466,9 @@ void KeyBackward(void)
     }
 }
 
+/**
+*
+*/
 void KeyRight(void)
 {
     if ( glCamera == OBSERVE )
@@ -516,28 +511,20 @@ void toggleLessDetail(void)
         glNumTrisDesired = 500;
 }
 
-// ---------------------------------------------------------------------
-// Called when the window has changed size
-//
 void changeSize(GLsizei w, GLsizei h)
 {
     GLfloat fAspect;
-    // Prevent a divide by zero, when window is too short
-    // (you cant make a window of zero width).
     if(h == GL_ZERO)
         h = 1;
 
-    // Set the viewport to be the entire window
     glViewport(GL_ZERO, GL_ZERO, w, h);
 
     fAspect = (GLfloat)w/(GLfloat)h;
 
-    // Reset coordinate system
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     {
-        // Produce the perspective projection
         double  left;
         double  right;
         double  bottom;
@@ -554,7 +541,6 @@ void changeSize(GLsizei w, GLsizei h)
     glLoadIdentity();
 }
 
-// --------------------------------------------------------------------
 void KeyFOVDown(void)
 {
     glFoVX -= 1.0f;
@@ -567,13 +553,8 @@ void KeyFOVUp(void)
     changeSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
-
-// ---------------------------------------------------------------------
-// Called to update the window
-//
 void renderScene(void)
 {
-    // Clear the GL buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
@@ -583,7 +564,6 @@ void renderScene(void)
     {
     default:
     case FOLLOW:
-        // Face the center of the map, while walking in a circle around the midpoint (animated).
         glRotatef(-glAnimationAngle,ZERO_F, 1.f,ZERO_F);
         glTranslatef(-glViewPosition[GL_ZERO], -glViewPosition[GL_ONE], -glViewPosition[2]);
 
@@ -592,16 +572,11 @@ void renderScene(void)
 
     case OBSERVE:
 
-        // Face the center of the map from a certain distance & allow user to orbit around the midpoint.
-        //
-        // Move to the Camera Position
         glTranslatef(0.f, glCameraPos[GL_ONE], glCameraPos[2]);
 
-        // Rotate to the Camera Rotation angle
         glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
         glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
 
-        // Adjust the origin to be the center of the map...
         glTranslatef(-((GLfloat) MAP_SIZE * .5f), .0f, -((GLfloat) MAP_SIZE * .5f));
 
         glPerspective = -glAnimationAngle;
@@ -611,17 +586,14 @@ void renderScene(void)
     case FLY_MODE:
         glAnimate = GL_ZERO;
 
-        // Rotate to the Camera Rotation angle
         glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
         glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
 
-        // Move to the Camera Position
         glTranslatef(-glViewPosition[GL_ZERO], -glViewPosition[GL_ONE], -glViewPosition[2]);
 
         glPerspective = glCameraRotation[ROTATE_YAW];
         break;
     }
-    // Perform the actual rendering of the mesh.
     roamDrawFrame();
 
     if ( glDrawFrustum )
@@ -629,7 +601,6 @@ void renderScene(void)
 
     glPopMatrix();
 
-    // Increment the frame counter.
     glFrames++;
 
     glPrint(10, 10, "Arrows keys to move around");
@@ -639,48 +610,36 @@ void renderScene(void)
     glPrint(10, 90, "R - Toggle frustrum");
 }
 
-// ---------------------------------------------------------------------
-// Called when user moves the mouse
-//
 void mouseMove(GLint mouseX, GLint mouseY)
 {
-    // If we're rotating, perform the updates needed
     if ( glRotate &&
             (glCamera != FOLLOW))
     {
         GLint dx, dy;
 
-        // Check for start flag
         if ( glStartX == -1 )
         {
             glStartX = mouseX;
             glStartY = mouseY;
         }
 
-        // Find the delta of the mouse
         dx = mouseX - glStartX;
 
         if ( glCamera == OBSERVE )
             dy = mouseY - glStartY;
         else
-            dy = glStartY - mouseY;		// Invert mouse in Drive/Fly mode
+            dy = glStartY - mouseY;
 
-        // Update the camera rotations
         glCameraRotation[GL_ZERO] = glCameraRotation[GL_ZERO] + (GLfloat) dy * .5f;
         glCameraRotation[GL_ONE] += (GLfloat) dx * .5f;
 
-        // Reset the deltas for the next idle call
         glStartX = mouseX;
         glStartY = mouseY;
     }
 }
 
-// ---------------------------------------------------------------------
-// Called when application is idle
-//
 void idleFn(void)
 {
-    // If animating, move the view position
     if (glAnimate)
     {
         glAnimationAngle = glAnimationAngle + 0.4f;
@@ -692,43 +651,31 @@ void idleFn(void)
     }
 }
 
-// ---------------------------------------------------------------------
-// This function does any needed initialization on the rendering
-// context.  Here it sets up and initializes the lighting for
-// the scene.
 void SetupRC()
 {
-    glEnable(GL_DEPTH_TEST);	// Hidden surface removal
-    glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
-    glEnable(GL_CULL_FACE);		// Cull back-facing triangles
+    glEnable(GL_DEPTH_TEST);
+    glFrontFace(GL_CCW);
+    glEnable(GL_CULL_FACE);
 
     glClearColor( .40f, .53f, .60f, 1.0f );
 
-// ----------- LIGHTING SETUP -----------
-    // Light values and coordinates
     GLfloat  whiteLight[]    = { .45f,  .45f, .45f, 1.f };
     GLfloat  ambientLight[]  = { .25f,  .25f, .25f, 1.f };
     GLfloat  diffuseLight[]  = { .50f,  .50f, .50f, 1.f };
     GLfloat	 lightPos[]      = { .00f, 300.00f, .0f, .0f };
 
-    // Setup and enable light 0
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLight);
     glLightfv(GL_LIGHT0,GL_AMBIENT,ambientLight);
     glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuseLight);
     glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
     glEnable(GL_LIGHT0);
 
-    // Enable color tracking
     glEnable(GL_COLOR_MATERIAL);
 
-    // Set Material properties to follow glColor values
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
-    // Set the color for the landscape
     glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, whiteLight );
 
-// ----------- TEXTURE SETUP -----------
-    // Use Generated Texture Coordinates
     static GLfloat s_vector[4] = { 1.0/(GLfloat)TEXTURE_SIZE, GL_ZERO, GL_ZERO, 0 };
     static GLfloat t_vector[4] = { GL_ZERO, GL_ZERO, 1.0/(GLfloat)TEXTURE_SIZE, 0 };
 

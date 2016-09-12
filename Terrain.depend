@@ -354,7 +354,7 @@
 
 1473125847 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\utils.h
 
-1473622139 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\utils.cpp
+1473632054 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\utils.cpp
 	<gl/gl.h>
 	<gl/glu.h>
 	<math.h>
@@ -364,7 +364,7 @@
 	"include/utils.h"
 	"include/Terrain.h"
 
-1473629464 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\roam.cpp
+1473631426 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\roam.cpp
 	<windows.h>
 	<math.h>
 	<gl/gl.h>
@@ -383,11 +383,11 @@
 1473125893 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\landscape.h
 	"Patch.h"
 
-1473228422 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
+1473691660 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
 
 1473619707 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
 
-1473629611 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
+1473691660 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
 	"Patch.h"
 
 1473182095 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\mesh.h
@@ -429,5 +429,14 @@
 	<stdlib.h>
 	<string.h>
 	"include/utils.h"
+	"include/Terrain.h"
+
+1473636812 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\classes.cpp
+	<windows.h>
+	<math.h>
+	<gl/gl.h>
+	<iostream>
+	<cstdlib>
+	<climits>
 	"include/Terrain.h"
 

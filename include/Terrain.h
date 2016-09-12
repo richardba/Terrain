@@ -4,9 +4,6 @@
 
 #include "Patch.h"
 
-// ---------------------------------------------------------------------
-// Various Pre-Defined map sizes & their #define counterparts:
-
 #define MAP_1024
 
 #ifdef MAP_2048
@@ -24,25 +21,16 @@
 
 #else
 
-// ------- 512x512 MAP -------
 #define MAP_SIZE (512)
 #define NUM_MESHES_PER_SIDE (8)
 
 #endif
 #endif
 
-// ---------------------------------------------------------------------
-// Scale of the terrain ie: 1 unit of the height map == how many world units (meters)?
-// 1.0f == 1 meter resolution
-// .5f == 1/2 meter resolution
-// .25f == 1/4 meter resolution
-// etc..
 #define MULT_SCALE (.5f)
 
-// How many TriTreeNodes should be allocated?
 #define POOL_SIZE (25000)
 
-// Some more definitions
 #define MESH_SIZE (MAP_SIZE/NUM_MESHES_PER_SIDE)
 #define TEXTURE_SIZE (128)
 
@@ -65,7 +53,6 @@
 #define M_PI (3.14159265358979323846f)
 #endif // defined
 
-// External variables and functions:
 extern float glFoVX;
 extern float glFrameDiff;
 extern GLfloat glCameraRotation[];
@@ -78,29 +65,34 @@ extern GLint glNumTrisRendered;
 extern void calcNormal(float v[3][3], float out[3]);
 extern void reduceToUnit(float vector[3]);
 
-//
-// Terrain Class
-// Holds all the information to render an entire landscape.
-//
+/**
+* Terrain Class
+*/
 class Terrain
 {
 protected:
-	unsigned char *heightMap;										// HeightMap of the Terrain
-	Patch m_Patches[NUM_MESHES_PER_SIDE][NUM_MESHES_PER_SIDE];	// Array of patches
+  unsigned char *heightMap;
+  Patch numPatches[NUM_MESHES_PER_SIDE][NUM_MESHES_PER_SIDE];
 
-	static GLint	m_NextTriNode;										// Index to next free TriTreeNode
-	static TriTreeNode m_TriPool[POOL_SIZE];						// Pool of TriTree nodes for splitting
+  static GLint	nextTriNode;
+  static TriTreeNode triPoolArr[POOL_SIZE];
 
-	static GLint GetNextTriNode() { return m_NextTriNode; }
-	static void SetNextTriNode( GLint nNextNode ) { m_NextTriNode = nNextNode; }
+  static GLint getNextTriNode()
+  {
+    return nextTriNode;
+  }
+  static void setNextTriNode( GLint nNextNode )
+  {
+    nextTriNode = nNextNode;
+  }
 
 public:
-	static TriTreeNode *AllocateTri();
+  static TriTreeNode *AllocateTri();
 
-	virtual void Init(unsigned char *hMap);
-	virtual void Reset();
-	virtual void Tessellate();
-	virtual void Render();
+  virtual void Init(unsigned char *hMap);
+  virtual void Reset();
+  virtual void Tessellate();
+  virtual void Render();
 
 };
 
