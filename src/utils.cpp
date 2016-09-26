@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/utils.h"
-#include "include/Terrain.h"
+#include "../include/utils.h"
+#include "../include/Terrain.h"
 
 /* Constantes responsáveis pelo modo da câmera */
 #define FOLLOW          (0)
@@ -79,15 +79,15 @@ unsigned char *glHeightMaster;
 void reduceToUnit(float vector[3])
 {
     float length;
-    length = sqrtf((vector[GL_ZERO]*vector[GL_ZERO]) +
-                   (vector[GL_ONE]*vector[GL_ONE]) +
+    length = sqrtf((vector[0]*vector[0]) +
+                   (vector[1]*vector[1]) +
                    (vector[2]*vector[2]));
     if(length == .0f)
     {
         length = 1.0f;
     }
-    vector[GL_ZERO] /= length;
-    vector[GL_ONE] /= length;
+    vector[0] /= length;
+    vector[1] /= length;
     vector[2] /= length;
 }
 
@@ -105,13 +105,13 @@ void calcNormal(float vector[3][3], float normal[3])
     static const GLint y = 1;
     static const GLint z = 2;
 
-    vector1[x] = vector[GL_ZERO][x] - vector[GL_ONE][x];
-    vector1[y] = vector[GL_ZERO][y] - vector[GL_ONE][y];
-    vector1[z] = vector[GL_ZERO][z] - vector[GL_ONE][z];
+    vector1[x] = vector[0][x] - vector[1][x];
+    vector1[y] = vector[0][y] - vector[1][y];
+    vector1[z] = vector[0][z] - vector[1][z];
 
-    vector2[x] = vector[GL_ONE][x] - vector[2][x];
-    vector2[y] = vector[GL_ONE][y] - vector[2][y];
-    vector2[z] = vector[GL_ONE][z] - vector[2][z];
+    vector2[x] = vector[1][x] - vector[2][x];
+    vector2[y] = vector[1][y] - vector[2][y];
+    vector2[z] = vector[1][z] - vector[2][z];
 
     normal[x] = vector1[y]*vector2[z] - vector1[z]*vector2[y];
     normal[y] = vector1[z]*vector2[x] - vector1[x]*vector2[z];
@@ -279,36 +279,36 @@ void drawFrustum()
     glBegin(GL_LINES);
 
     glColor3f(GL_ONE, GL_ZERO, GL_ZERO);
-    glVertex3f(	glViewPosition[GL_ZERO],
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0],
+                glViewPosition[1],
                 glViewPosition[2] );
 
-    glVertex3f(	glViewPosition[GL_ZERO] + 50.0f * sinf( glPerspective * M_PI / 180.0f ),
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0] + 50.0f * sinf( glPerspective * M_PI / 180.0f ),
+                glViewPosition[1],
                 glViewPosition[2] - 50.0f * cosf( glPerspective * M_PI / 180.0f ));
 
 
     glColor3f(GL_ZERO, GL_ONE, GL_ZERO);
-    glVertex3f(	glViewPosition[GL_ZERO],
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0],
+                glViewPosition[1],
                 glViewPosition[2] );
 
-    glVertex3f(	glViewPosition[GL_ZERO] + 1000.0f * sinf( (glPerspective-45.0f) * M_PI / 180.0f ),
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0] + 1000.0f * sinf( (glPerspective-45.0f) * M_PI / 180.0f ),
+                glViewPosition[1],
                 glViewPosition[2] - 1000.0f * cosf( (glPerspective-45.0f) * M_PI / 180.0f ));
 
-    glVertex3f(	glViewPosition[GL_ZERO],
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0],
+                glViewPosition[1],
                 glViewPosition[2] );
 
-    glVertex3f(	glViewPosition[GL_ZERO] + 1000.0f * sinf( (glPerspective+45.0f) * M_PI / 180.0f ),
-                glViewPosition[GL_ONE],
+    glVertex3f(	glViewPosition[0] + 1000.0f * sinf( (glPerspective+45.0f) * M_PI / 180.0f ),
+                glViewPosition[1],
                 glViewPosition[2] - 1000.0f * cosf( (glPerspective+45.0f) * M_PI / 180.0f ));
 
     const float PI_DIV_180 = M_PI / 180.0f;
     const float FOV_DIV_2 = glFoVX/2;
 
-    GLint ptEyeX = (GLint)(glViewPosition[GL_ZERO] - MESH_SIZE * sinf( glPerspective * PI_DIV_180 ));
+    GLint ptEyeX = (GLint)(glViewPosition[0] - MESH_SIZE * sinf( glPerspective * PI_DIV_180 ));
     GLint ptEyeY = (GLint)(glViewPosition[2] + MESH_SIZE * cosf( glPerspective * PI_DIV_180 ));
 
     GLint ptLeftX = (GLint)(ptEyeX + 100.0f * sinf( (glPerspective-FOV_DIV_2) * PI_DIV_180 ));
@@ -319,19 +319,19 @@ void drawFrustum()
 
     glColor3f(GL_ONE, GL_ONE, GL_ZERO);
     glVertex3f(	(float)ptEyeX,
-                glViewPosition[GL_ONE],
+                glViewPosition[1],
                 (float)ptEyeY );
 
     glVertex3f(	(float)ptLeftX,
-                glViewPosition[GL_ONE],
+                glViewPosition[1],
                 (float)ptLeftY);
 
     glVertex3f(	(float)ptEyeX,
-                glViewPosition[GL_ONE],
+                glViewPosition[1],
                 (float)ptEyeY );
 
     glVertex3f(	(float)ptRightX,
-                glViewPosition[GL_ONE],
+                glViewPosition[1],
                 (float)ptRightY);
 
     glEnd();
@@ -397,24 +397,24 @@ void KeyForward(void)
         break;
 
     case DRIVE:
-        glViewPosition[GL_ZERO] += 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
+        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
         glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
 
-        if ( glViewPosition[GL_ZERO] > MAP_SIZE ) glViewPosition[GL_ZERO] = MAP_SIZE;
-        if ( glViewPosition[GL_ZERO] < GL_ZERO) glViewPosition[GL_ZERO] = GL_ZERO;
+        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
+        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
 
         if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
         if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
 
-        glViewPosition[GL_ONE] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[GL_ZERO] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
+        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
         break;
 
     case FLY_MODE:
-        glViewPosition[GL_ZERO] += 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
+        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
                                    * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
         glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
                              * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[GL_ONE] -= 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
+        glViewPosition[1] -= 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
         break;
     }
 }
@@ -425,7 +425,7 @@ void KeyForward(void)
 void KeyLeft(void)
 {
     if ( glCamera == OBSERVE )
-        glCameraRotation[GL_ONE] -= 5.0f;
+        glCameraRotation[1] -= 5.0f;
 }
 
 /**
@@ -444,24 +444,24 @@ void KeyBackward(void)
         break;
 
     case DRIVE:
-        glViewPosition[GL_ZERO] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
+        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
         glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
 
-        if ( glViewPosition[GL_ZERO] > MAP_SIZE ) glViewPosition[GL_ZERO] = MAP_SIZE;
-        if ( glViewPosition[GL_ZERO] < GL_ZERO) glViewPosition[GL_ZERO] = GL_ZERO;
+        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
+        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
 
         if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
         if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
 
-        glViewPosition[GL_ONE] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[GL_ZERO] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
+        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
         break;
 
     case FLY_MODE:
-        glViewPosition[GL_ZERO] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
+        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
                                    * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
         glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
                              * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[GL_ONE] += 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
+        glViewPosition[1] += 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
         break;
     }
 }
@@ -472,7 +472,7 @@ void KeyBackward(void)
 void KeyRight(void)
 {
     if ( glCamera == OBSERVE )
-        glCameraRotation[GL_ONE] += 5.0f;
+        glCameraRotation[1] += 5.0f;
 }
 
 void animateToggle(void)
@@ -488,13 +488,13 @@ void frustrumToggle(void)
 void KeyUp(void)
 {
     if ( glCamera == OBSERVE )
-        glCameraPos[GL_ONE] -= 5.f;
+        glCameraPos[1] -= 5.f;
 }
 
 void KeyDown(void)
 {
     if ( glCamera == OBSERVE )
-        glCameraPos[GL_ONE] += 5.f;
+        glCameraPos[1] += 5.f;
 }
 
 void toggleMoreDetail(void)
@@ -565,14 +565,14 @@ void renderScene(void)
     default:
     case FOLLOW:
         glRotatef(-glAnimationAngle,ZERO_F, 1.f,ZERO_F);
-        glTranslatef(-glViewPosition[GL_ZERO], -glViewPosition[GL_ONE], -glViewPosition[2]);
+        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
 
         glPerspective = -glAnimationAngle;
         break;
 
     case OBSERVE:
 
-        glTranslatef(0.f, glCameraPos[GL_ONE], glCameraPos[2]);
+        glTranslatef(0.f, glCameraPos[1], glCameraPos[2]);
 
         glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
         glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
@@ -589,7 +589,7 @@ void renderScene(void)
         glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
         glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
 
-        glTranslatef(-glViewPosition[GL_ZERO], -glViewPosition[GL_ONE], -glViewPosition[2]);
+        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
 
         glPerspective = glCameraRotation[ROTATE_YAW];
         break;
@@ -630,8 +630,8 @@ void mouseMove(GLint mouseX, GLint mouseY)
         else
             dy = glStartY - mouseY;
 
-        glCameraRotation[GL_ZERO] = glCameraRotation[GL_ZERO] + (GLfloat) dy * .5f;
-        glCameraRotation[GL_ONE] += (GLfloat) dx * .5f;
+        glCameraRotation[0] = glCameraRotation[0] + (GLfloat) dy * .5f;
+        glCameraRotation[1] += (GLfloat) dx * .5f;
 
         glStartX = mouseX;
         glStartY = mouseY;
@@ -644,10 +644,10 @@ void idleFn(void)
     {
         glAnimationAngle = glAnimationAngle + 0.4f;
 
-        glViewPosition[GL_ZERO] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
+        glViewPosition[0] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
         glViewPosition[2] = ((GLfloat) MAP_SIZE / 4.f) + ((cosf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
 
-        glViewPosition[GL_ONE] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[GL_ZERO] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
+        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
     }
 }
 

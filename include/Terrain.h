@@ -2,7 +2,7 @@
 #ifndef LANDSCAPE_H
 #define LANDSCAPE_H
 
-#include "Patch.h"
+#include "../include/Patch.h"
 
 #define MAP_1024
 

@@ -20,8 +20,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <climits>
-
-#include "include/Terrain.h"
+#include "../include/Terrain.h"
+#include "../include/Vbo.h"
 
 inline GLint orientation(GLint pX, GLint pY, GLint qX, GLint qY, GLint rX, GLint rY)
 {
@@ -109,7 +109,7 @@ void Patch::recursiveTessellate(TriTreeNode *tri, GLint leftX, GLint leftY, GLin
 
     if (node < (1 << VARIANCE_DEPTH))
     {
-        float distance = 1.f + sqrtf(SQR((float)centerX - glViewPosition[GL_ZERO]) +
+        float distance = 1.f + sqrtf(SQR((float)centerX - glViewPosition[0]) +
                                       SQR((float)centerY - glViewPosition[2]));
 
         TriVariance =
@@ -134,6 +134,9 @@ void Patch::recursiveTessellate(TriTreeNode *tri, GLint leftX, GLint leftY, GLin
     }
 }
 
+/**
+* Mudar o metódo para fazer uso de shader
+*/
 void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint rightX,
                          GLint rightY, GLint apexX, GLint apexY)
 {
@@ -160,16 +163,16 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
             float v[3][3];
             float out[3];
 
-            v[GL_ZERO][GL_ZERO] = (GLfloat)leftX;
-            v[GL_ZERO][GL_ONE] = (GLfloat)leftZ;
-            v[GL_ZERO][2] = (GLfloat)leftY;
+            v[0][0] = (GLfloat)leftX;
+            v[0][1] = (GLfloat)leftZ;
+            v[0][2] = (GLfloat)leftY;
 
-            v[GL_ONE][GL_ZERO] = (GLfloat)rightX;
-            v[GL_ONE][GL_ONE] = (GLfloat)rightZ;
-            v[GL_ONE][2] = (GLfloat)rightY;
+            v[1][0] = (GLfloat)rightX;
+            v[1][1] = (GLfloat)rightZ;
+            v[1][2] = (GLfloat)rightY;
 
-            v[2][GL_ZERO] = (GLfloat)apexX;
-            v[2][GL_ONE] = (GLfloat)apexZ;
+            v[2][0] = (GLfloat)apexX;
+            v[2][1] = (GLfloat)apexZ;
             v[2][2] = (GLfloat)apexY;
 
             calcNormal(v, out);
@@ -278,7 +281,7 @@ void Patch::ComputeVariance()
     currentDifference = patchDiffLeft;
     recursiveComputeDiff(GL_ZERO, MESH_SIZE, heightMap[MESH_SIZE * MAP_SIZE],
                           MESH_SIZE, GL_ZERO, heightMap[MESH_SIZE], GL_ZERO, GL_ZERO,
-                          heightMap[GL_ZERO], 1);
+                          heightMap[0], 1);
 
     currentDifference = patchDiffRight;
     recursiveComputeDiff(MESH_SIZE, GL_ZERO, heightMap[MESH_SIZE], GL_ZERO, MESH_SIZE,
@@ -368,7 +371,7 @@ void Terrain::Reset()
     const float FOV_DIV_2 = glFoVX / 2;
 
     GLint eyeX =
-        (GLint)(glViewPosition[GL_ZERO] - MESH_SIZE * sinf(glPerspective * PI_DIV_180));
+        (GLint)(glViewPosition[0] - MESH_SIZE * sinf(glPerspective * PI_DIV_180));
     GLint eyeY =
         (GLint)(glViewPosition[2] + MESH_SIZE * cosf(glPerspective * PI_DIV_180));
 
@@ -435,7 +438,7 @@ void Terrain::Reset()
 void Terrain::Tessellate()
 {
     GLint nCount;
-    Patch *patch = &(numPatches[GL_ZERO][GL_ZERO]);
+    Patch *patch = &(numPatches[0][0]);
     for (nCount = GL_ZERO; nCount < NUM_MESHES_PER_SIDE * NUM_MESHES_PER_SIDE;
             nCount++, patch++)
     {
@@ -446,7 +449,7 @@ void Terrain::Tessellate()
 void Terrain::Render()
 {
     GLint nCount;
-    Patch *patch = &(numPatches[GL_ZERO][GL_ZERO]);
+    Patch *patch = &(numPatches[0][0]);
 
     glScalef(1.0f, MULT_SCALE, 1.0f);
 

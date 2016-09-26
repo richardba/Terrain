@@ -11,7 +11,7 @@
 	"utility.h"
 	"landscape.h"
 
-1468526365 c:\mingw\include\gl\gl.h
+1469391548 c:\mingw\include\gl\gl.h
 
 1426360528 c:\mingw\include\gl\glut.h
 	"freeglut_std.h"
@@ -27,7 +27,7 @@
 	<GL/glu.h>
 	<stdlib.h>
 
-1468526365 c:\mingw\include\windows.h
+1469391548 c:\mingw\include\windows.h
 	<winresrc.h>
 	<stdarg.h>
 	<windef.h>
@@ -57,7 +57,7 @@
 	<winsock.h>
 	<ole2.h>
 
-1468526365 c:\mingw\include\winresrc.h
+1469391548 c:\mingw\include\winresrc.h
 	<winuser.h>
 	<winnt.h>
 	<winver.h>
@@ -65,40 +65,40 @@
 	<dlgs.h>
 	<commctrl.h>
 
-1468526365 c:\mingw\include\winuser.h
+1469391548 c:\mingw\include\winuser.h
 
-1468526365 c:\mingw\include\winnt.h
+1469391548 c:\mingw\include\winnt.h
 	<winerror.h>
 	<string.h>
 	<basetsd.h>
 	<pshpack4.h>
 	<poppack.h>
 
-1468526365 c:\mingw\include\winerror.h
+1469391548 c:\mingw\include\winerror.h
 
-1468526352 c:\mingw\include\string.h
+1469985570 c:\mingw\include\string.h
 	<_mingw.h>
 	<stddef.h>
 	<strings.h>
 	<wchar.h>
 
-1468526352 c:\mingw\include\_mingw.h
+1469985570 c:\mingw\include\_mingw.h
 	<msvcrtver.h>
 	<w32api.h>
 
-1468526352 c:\mingw\include\msvcrtver.h
+1469985570 c:\mingw\include\msvcrtver.h
 	<_mingw.h>
 
-1468526364 c:\mingw\include\w32api.h
+1469391548 c:\mingw\include\w32api.h
 	<sdkddkver.h>
 
-1468526365 c:\mingw\include\sdkddkver.h
+1469391548 c:\mingw\include\sdkddkver.h
 
-1468526352 c:\mingw\include\strings.h
+1469985570 c:\mingw\include\strings.h
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\wchar.h
+1469985570 c:\mingw\include\wchar.h
 	<_mingw.h>
 	<wctype.h>
 	<sys/types.h>
@@ -111,106 +111,106 @@
 	"locale.h"
 	"process.h"
 
-1468526352 c:\mingw\include\wctype.h
+1469985570 c:\mingw\include\wctype.h
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\sys\types.h
+1469985570 c:\mingw\include\sys\types.h
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\stdio.h
+1469985570 c:\mingw\include\stdio.h
 	<_mingw.h>
 	<stddef.h>
 	"sys/types.h"
 	"stdarg.h"
 	<locale.h>
 
-1468526352 c:\mingw\include\locale.h
+1469985570 c:\mingw\include\locale.h
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\stdlib.h
+1469985570 c:\mingw\include\stdlib.h
 	<_mingw.h>
 	<stddef.h>
 	<locale.h>
 
-1468526352 c:\mingw\include\direct.h
+1469985570 c:\mingw\include\direct.h
 	"dos.h"
 
-1468526352 c:\mingw\include\dos.h
+1469985570 c:\mingw\include\dos.h
 	"io.h"
 
-1468526352 c:\mingw\include\io.h
+1469985570 c:\mingw\include\io.h
 	<_mingw.h>
 	<sys/types.h>
 	"stdint.h"
 
-1468526352 c:\mingw\include\stdint.h
+1469985570 c:\mingw\include\stdint.h
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\sys\stat.h
+1469985570 c:\mingw\include\sys\stat.h
 	<sys/types.h>
 
-1468526352 c:\mingw\include\time.h
+1469985570 c:\mingw\include\time.h
 	<sys/types.h>
 	<_mingw.h>
 	<stddef.h>
 
-1468526352 c:\mingw\include\process.h
+1469985570 c:\mingw\include\process.h
 	<_mingw.h>
 	<sys/types.h>
 	"stdint.h"
 
-1468526364 c:\mingw\include\basetsd.h
+1469391548 c:\mingw\include\basetsd.h
 
-1468526365 c:\mingw\include\pshpack4.h
+1469391548 c:\mingw\include\pshpack4.h
 
-1468526365 c:\mingw\include\poppack.h
+1469391548 c:\mingw\include\poppack.h
 
-1468526365 c:\mingw\include\winver.h
+1469391548 c:\mingw\include\winver.h
 
-1468526364 c:\mingw\include\dde.h
+1469391548 c:\mingw\include\dde.h
 
-1468526364 c:\mingw\include\dlgs.h
+1469391548 c:\mingw\include\dlgs.h
 
-1468526364 c:\mingw\include\commctrl.h
+1469391548 c:\mingw\include\commctrl.h
 	<prsht.h>
 
-1468526365 c:\mingw\include\prsht.h
+1469391548 c:\mingw\include\prsht.h
 
-1468526365 c:\mingw\include\windef.h
+1469391548 c:\mingw\include\windef.h
 	<w32api.h>
 	<winnt.h>
 
-1468526365 c:\mingw\include\wincon.h
+1469391548 c:\mingw\include\wincon.h
 
-1468526365 c:\mingw\include\winbase.h
+1469391548 c:\mingw\include\winbase.h
 
-1468526365 c:\mingw\include\wingdi.h
+1469391548 c:\mingw\include\wingdi.h
 
-1468526365 c:\mingw\include\winnls.h
+1469391548 c:\mingw\include\winnls.h
 
-1468526365 c:\mingw\include\winnetwk.h
+1469391548 c:\mingw\include\winnetwk.h
 
-1468526365 c:\mingw\include\winreg.h
+1469391548 c:\mingw\include\winreg.h
 
-1468526365 c:\mingw\include\winsvc.h
+1469391548 c:\mingw\include\winsvc.h
 
-1468526364 c:\mingw\include\cderr.h
+1469391548 c:\mingw\include\cderr.h
 
-1468526364 c:\mingw\include\ddeml.h
+1469391548 c:\mingw\include\ddeml.h
 
-1468526364 c:\mingw\include\imm.h
+1469391548 c:\mingw\include\imm.h
 
-1468526364 c:\mingw\include\lzexpand.h
+1469391548 c:\mingw\include\lzexpand.h
 
-1468526365 c:\mingw\include\mmsystem.h
+1469391548 c:\mingw\include\mmsystem.h
 
-1468526365 c:\mingw\include\nb30.h
+1469391548 c:\mingw\include\nb30.h
 
-1468526365 c:\mingw\include\rpc.h
+1469391548 c:\mingw\include\rpc.h
 	<windows.h>
 	<rpcdce.h>
 	<rpcnsi.h>
@@ -218,71 +218,71 @@
 	<winerror.h>
 	<excpt.h>
 
-1468526365 c:\mingw\include\rpcdce.h
+1469391548 c:\mingw\include\rpcdce.h
 	<basetyps.h>
 	<rpcdcep.h>
 
-1468526364 c:\mingw\include\basetyps.h
+1469391548 c:\mingw\include\basetyps.h
 
-1468526365 c:\mingw\include\rpcdcep.h
+1469391548 c:\mingw\include\rpcdcep.h
 
-1468526365 c:\mingw\include\rpcnsi.h
+1469391548 c:\mingw\include\rpcnsi.h
 
-1468526365 c:\mingw\include\rpcnterr.h
+1469391548 c:\mingw\include\rpcnterr.h
 
-1468526352 c:\mingw\include\excpt.h
+1469985570 c:\mingw\include\excpt.h
 	<_mingw.h>
 	<windef.h>
 
-1468526365 c:\mingw\include\shellapi.h
+1469391548 c:\mingw\include\shellapi.h
 	<pshpack2.h>
 	<poppack.h>
 
-1468526365 c:\mingw\include\pshpack2.h
+1469391548 c:\mingw\include\pshpack2.h
 
-1468526365 c:\mingw\include\winperf.h
+1469391548 c:\mingw\include\winperf.h
 
-1468526364 c:\mingw\include\commdlg.h
+1469391548 c:\mingw\include\commdlg.h
 	<unknwn.h>
 	<prsht.h>
 
-1468526365 c:\mingw\include\unknwn.h
+1469391548 c:\mingw\include\unknwn.h
 	<windows.h>
 	<objfwd.h>
 	<wtypes.h>
 
-1468526365 c:\mingw\include\objfwd.h
+1469391548 c:\mingw\include\objfwd.h
 	<basetyps.h>
 
-1468526365 c:\mingw\include\wtypes.h
+1469391548 c:\mingw\include\wtypes.h
 	<rpc.h>
 	<rpcndr.h>
 
-1468526365 c:\mingw\include\rpcndr.h
+1469391548 c:\mingw\include\rpcndr.h
 	<rpcnsip.h>
 	<objfwd.h>
 
-1468526365 c:\mingw\include\rpcnsip.h
+1469391548 c:\mingw\include\rpcnsip.h
 
-1468526365 c:\mingw\include\winspool.h
+1469391548 c:\mingw\include\winspool.h
 
-1468526365 c:\mingw\include\winsock2.h
+1469391548 c:\mingw\include\winsock2.h
 	<windows.h>
 
-1468526365 c:\mingw\include\winsock.h
+1469391548 c:\mingw\include\winsock.h
 	<windows.h>
 	<mswsock.h>
 
-1468526365 c:\mingw\include\mswsock.h
+1469391548 c:\mingw\include\mswsock.h
 
-1468526365 c:\mingw\include\ole2.h
+1469391548 c:\mingw\include\ole2.h
 	<winerror.h>
 	<objbase.h>
 	<olectlid.h>
 	<oleauto.h>
 	<oleidl.h>
 
-1468526365 c:\mingw\include\objbase.h
+1469391548 c:\mingw\include\objbase.h
 	<rpc.h>
 	<rpcndr.h>
 	<stdlib.h>
@@ -292,28 +292,28 @@
 	<objidl.h>
 	<cguid.h>
 
-1468526365 c:\mingw\include\objidl.h
+1469391548 c:\mingw\include\objidl.h
 	<objfwd.h>
 
-1468526364 c:\mingw\include\cguid.h
+1469391548 c:\mingw\include\cguid.h
 
-1468526365 c:\mingw\include\olectlid.h
+1469391548 c:\mingw\include\olectlid.h
 
-1468526365 c:\mingw\include\oleauto.h
+1469391548 c:\mingw\include\oleauto.h
 	<oaidl.h>
 
-1468526365 c:\mingw\include\oaidl.h
+1469391548 c:\mingw\include\oaidl.h
 	<windows.h>
 	<ole2.h>
 
-1468526365 c:\mingw\include\oleidl.h
+1469391548 c:\mingw\include\oleidl.h
 	<objfwd.h>
 
-1468526365 c:\mingw\include\gl\glu.h
+1469391548 c:\mingw\include\gl\glu.h
 	<stddef.h>
 	<GL/gl.h>
 
-1468526352 c:\mingw\include\math.h
+1469985570 c:\mingw\include\math.h
 	<_mingw.h>
 
 952878828 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\utility.h
@@ -383,12 +383,12 @@
 1473125893 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\landscape.h
 	"Patch.h"
 
-1473691660 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
+1474853648 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
 
-1473619707 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
+1474853435 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
 
-1473691660 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
-	"Patch.h"
+1474218963 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
+	"../include/Patch.h"
 
 1473182095 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\mesh.h
 
@@ -431,7 +431,7 @@
 	"include/utils.h"
 	"include/Terrain.h"
 
-1473636812 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\classes.cpp
+1473691681 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\classes.cpp
 	<windows.h>
 	<math.h>
 	<gl/gl.h>
@@ -439,4 +439,511 @@
 	<cstdlib>
 	<climits>
 	"include/Terrain.h"
+
+1474853668 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\classes.cpp
+	<windows.h>
+	<math.h>
+	<gl/gl.h>
+	<iostream>
+	<cstdlib>
+	<climits>
+	"../include/Terrain.h"
+	"../include/Vbo.h"
+
+1474853644 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
+	<gl/gl.h>
+	<gl/glut.h>
+	<gl/freeglut.h>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<ctime>
+	<iostream>
+	<vector>
+	"../include/utils.h"
+	"../include/Terrain.h"
+	"../include/Vbo.h"
+
+1474838517 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\shader.cpp
+	"../include/Shader.h"
+	<string>
+	<fstream>
+	<iostream>
+	<windows.h>
+	<GL/glew.h>
+	<GL/glut.h>
+	<glm/glm.hpp>
+
+1474218779 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\shader.h
+
+1439207242 c:\mingw\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1469985570 c:\mingw\include\inttypes.h
+	<_mingw.h>
+	<stdint.h>
+	<stddef.h>
+
+1472773334 c:\mingw\include\glm\glm.hpp
+	"detail/_fixes.hpp"
+	<cmath>
+	<climits>
+	<cfloat>
+	<limits>
+	<cassert>
+	"fwd.hpp"
+	"vec2.hpp"
+	"vec3.hpp"
+	"vec4.hpp"
+	"mat2x2.hpp"
+	"mat2x3.hpp"
+	"mat2x4.hpp"
+	"mat3x2.hpp"
+	"mat3x3.hpp"
+	"mat3x4.hpp"
+	"mat4x2.hpp"
+	"mat4x3.hpp"
+	"mat4x4.hpp"
+	"trigonometric.hpp"
+	"exponential.hpp"
+	"common.hpp"
+	"packing.hpp"
+	"geometric.hpp"
+	"matrix.hpp"
+	"vector_relational.hpp"
+	"integer.hpp"
+
+1471474413 c:\mingw\include\glm\detail\_fixes.hpp
+	<cmath>
+
+1471474414 c:\mingw\include\glm\fwd.hpp
+	"detail/type_int.hpp"
+	"detail/type_float.hpp"
+	"detail/type_vec.hpp"
+	"detail/type_mat.hpp"
+
+1471474413 c:\mingw\include\glm\detail\type_int.hpp
+	"setup.hpp"
+	<type_traits>
+	<cstdint>
+
+1473589505 c:\mingw\include\glm\detail\setup.hpp
+	<cassert>
+	<cstddef>
+	"../simd/platform.h"
+
+1472773335 c:\mingw\include\glm\simd\platform.h
+	<cuda.h>
+	<intrin.h>
+	<immintrin.h>
+	<immintrin.h>
+	<nmmintrin.h>
+	<smmintrin.h>
+	<tmmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+
+1471474413 c:\mingw\include\glm\detail\type_float.hpp
+	"setup.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_vec.hpp
+	"precision.hpp"
+	"type_int.hpp"
+
+1471474413 c:\mingw\include\glm\detail\precision.hpp
+	"setup.hpp"
+
+1471474413 c:\mingw\include\glm\detail\type_mat.hpp
+	"precision.hpp"
+
+1471474414 c:\mingw\include\glm\vec2.hpp
+	"detail/type_vec2.hpp"
+
+1473589505 c:\mingw\include\glm\detail\type_vec2.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec2.inl"
+
+1471474413 c:\mingw\include\glm\detail\_swizzle.hpp
+
+1471474413 c:\mingw\include\glm\detail\_swizzle_func.hpp
+
+1471474414 c:\mingw\include\glm\detail\type_vec2.inl
+
+1471474414 c:\mingw\include\glm\vec3.hpp
+	"detail/type_vec3.hpp"
+
+1473589505 c:\mingw\include\glm\detail\type_vec3.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec3.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_vec3.inl
+
+1471474414 c:\mingw\include\glm\vec4.hpp
+	"detail/type_vec4.hpp"
+
+1473589505 c:\mingw\include\glm\detail\type_vec4.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec4.inl"
+
+1473453492 c:\mingw\include\glm\detail\type_vec4.inl
+	"type_vec4_simd.inl"
+
+1472773334 c:\mingw\include\glm\detail\type_vec4_simd.inl
+
+1471474414 c:\mingw\include\glm\mat2x2.hpp
+	"detail/type_mat2x2.hpp"
+
+1471474413 c:\mingw\include\glm\detail\type_mat2x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x2.inl"
+
+1471474413 c:\mingw\include\glm\detail\type_mat2x2.inl
+	"func_matrix.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_matrix.hpp
+	"../detail/precision.hpp"
+	"../detail/setup.hpp"
+	"../detail/type_mat.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	"func_matrix.inl"
+
+1471474414 c:\mingw\include\glm\mat2x3.hpp
+	"detail/type_mat2x3.hpp"
+
+1471474413 c:\mingw\include\glm\detail\type_mat2x3.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x3.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat2x3.inl
+
+1471474414 c:\mingw\include\glm\mat2x4.hpp
+	"detail/type_mat2x4.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat2x4.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x4.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat2x4.inl
+
+1471474414 c:\mingw\include\glm\mat3x2.hpp
+	"detail/type_mat3x2.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x2.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x2.inl
+
+1471474414 c:\mingw\include\glm\mat3x3.hpp
+	"detail/type_mat3x3.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x3.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x3.inl
+	"func_matrix.hpp"
+
+1471474414 c:\mingw\include\glm\mat3x4.hpp
+	"detail/type_mat3x4.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x4.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x4.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat3x4.inl
+
+1471474414 c:\mingw\include\glm\mat4x2.hpp
+	"detail/type_mat4x2.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x2.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x2.inl
+
+1471474414 c:\mingw\include\glm\mat4x3.hpp
+	"detail/type_mat4x3.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x3.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x3.inl
+
+1471474414 c:\mingw\include\glm\mat4x4.hpp
+	"detail/type_mat4x4.hpp"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x4.hpp
+	"../fwd.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x4.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x4.inl
+	"func_matrix.hpp"
+	"type_mat4x4_simd.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_mat4x4_simd.inl
+
+1471474413 c:\mingw\include\glm\detail\func_matrix.inl
+	"../geometric.hpp"
+	<limits>
+	"func_matrix_simd.inl"
+
+1471474414 c:\mingw\include\glm\geometric.hpp
+	"detail/func_geometric.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_geometric.hpp
+	"type_vec3.hpp"
+	"func_geometric.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_geometric.inl
+	"func_exponential.hpp"
+	"func_common.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_float.hpp"
+	"func_geometric_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_exponential.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	<cmath>
+	"func_exponential.inl"
+
+1473589505 c:\mingw\include\glm\detail\type_vec1.hpp
+	"../fwd.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec1.inl"
+
+1471474414 c:\mingw\include\glm\detail\type_vec1.inl
+
+1471474413 c:\mingw\include\glm\detail\func_exponential.inl
+	"func_vector_relational.hpp"
+	"_vectorize.hpp"
+	<limits>
+	<cmath>
+	<cassert>
+	"func_exponential_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_vector_relational.hpp
+	"precision.hpp"
+	"setup.hpp"
+	"func_vector_relational.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_vector_relational.inl
+	<limits>
+	"func_vector_relational_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_vector_relational_simd.inl
+
+1471474413 c:\mingw\include\glm\detail\_vectorize.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_exponential_simd.inl
+	"../simd/exponential.h"
+
+1471474414 c:\mingw\include\glm\simd\exponential.h
+	"platform.h"
+
+1471474413 c:\mingw\include\glm\detail\func_common.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"type_int.hpp"
+	"_fixes.hpp"
+	"func_common.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_common.inl
+	"func_vector_relational.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"_vectorize.hpp"
+	<limits>
+	"func_common_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_common_simd.inl
+	"../simd/common.h"
+	<immintrin.h>
+
+1471474414 c:\mingw\include\glm\simd\common.h
+	"platform.h"
+
+1471474413 c:\mingw\include\glm\detail\func_geometric_simd.inl
+	"../simd/geometric.h"
+
+1471474414 c:\mingw\include\glm\simd\geometric.h
+	"common.h"
+
+1471474413 c:\mingw\include\glm\detail\func_matrix_simd.inl
+	"type_mat4x4.hpp"
+	"func_geometric.hpp"
+	"../simd/matrix.h"
+
+1471474414 c:\mingw\include\glm\simd\matrix.h
+	"geometric.h"
+
+1471474414 c:\mingw\include\glm\trigonometric.hpp
+	"detail/func_trigonometric.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_trigonometric.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_trigonometric.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_trigonometric.inl
+	"_vectorize.hpp"
+	<cmath>
+	<limits>
+	"func_trigonometric_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_trigonometric_simd.inl
+
+1471474414 c:\mingw\include\glm\exponential.hpp
+	"detail/func_exponential.hpp"
+
+1471474413 c:\mingw\include\glm\common.hpp
+	"detail/func_common.hpp"
+
+1471474414 c:\mingw\include\glm\packing.hpp
+	"detail/func_packing.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_packing.hpp
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"func_packing.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_packing.inl
+	"func_common.hpp"
+	"type_half.hpp"
+	"../fwd.hpp"
+	"func_packing_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\type_half.hpp
+	"setup.hpp"
+	"type_half.inl"
+
+1471474413 c:\mingw\include\glm\detail\type_half.inl
+
+1471474413 c:\mingw\include\glm\detail\func_packing_simd.inl
+
+1471474414 c:\mingw\include\glm\matrix.hpp
+	"detail/func_matrix.hpp"
+
+1471474414 c:\mingw\include\glm\vector_relational.hpp
+	"detail/func_vector_relational.hpp"
+
+1471474414 c:\mingw\include\glm\integer.hpp
+	"detail/func_integer.hpp"
+
+1471474413 c:\mingw\include\glm\detail\func_integer.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_common.hpp"
+	"func_vector_relational.hpp"
+	"func_integer.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_integer.inl
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_int.hpp"
+	"_vectorize.hpp"
+	<intrin.h>
+	<limits>
+	"func_integer_simd.inl"
+
+1471474413 c:\mingw\include\glm\detail\func_integer_simd.inl
+	"../simd/integer.h"
+
+1471474414 c:\mingw\include\glm\simd\integer.h
+
+1474838612 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\utils.cpp
+	<gl/gl.h>
+	<gl/glu.h>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../include/utils.h"
+	"../include/Terrain.h"
+
+1474853711 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
+	<vector>
 

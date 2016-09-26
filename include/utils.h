@@ -4,6 +4,11 @@
 */
 #define WINDOW_HEIGHT (480)
 #define WINDOW_WIDTH  (640)
+// Variáveis do pipeline gráfico
+extern GLuint vertexArrayId;
+extern GLuint vertexBuffer;
+extern GLuint colorBuffer;
+extern GLuint shaderHandle;
 
 // Varíaveis compartilhadas
 extern GLint glAnimate;

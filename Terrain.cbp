@@ -42,12 +42,14 @@
 			<Add library="gdi32" />
 			<Add directory="C:/MinGW/lib" />
 		</Linker>
-		<Unit filename="Classes.cpp" />
 		<Unit filename="include/Patch.h" />
+		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Terrain.h" />
 		<Unit filename="include/utils.h" />
-		<Unit filename="main.cpp" />
-		<Unit filename="utils.cpp" />
+		<Unit filename="src/Classes.cpp" />
+		<Unit filename="src/Shader.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/utils.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

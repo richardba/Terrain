@@ -19,12 +19,12 @@
 #include <math.h>
 #include <ctime>
 #include <iostream>
+#include <vector>
 
-#include "include/utils.h"
-#include "include/Terrain.h"
+#include "../include/utils.h"
+#include "../include/Terrain.h"
 
 using namespace std;
-
 /**
 * Método para renderizar a cena
 */

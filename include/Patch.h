@@ -18,7 +18,6 @@ struct TriTreeNode
   TriTreeNode *rightNeighbor;
 };
 
-
 /**
 * Patch Class
 */
