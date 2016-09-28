@@ -9,9 +9,9 @@
 #ifdef defined(_WIN32) || defined(WIN32)
 #define OS_Windows
 #endif
-#include <gl/gl.h>
-#include <gl/glut.h>
-#include <gl/freeglut.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 
 #include <stdio.h>
@@ -23,8 +23,10 @@
 
 #include "../include/utils.h"
 #include "../include/Terrain.h"
+#include "../include/Vbo.h"
 
 using namespace std;
+std::vector<Vertex>* vbo;
 /**
 * Método para renderizar a cena
 */
@@ -118,6 +120,7 @@ void GLUTMouseClick(GLint button, GLint state, GLint x, GLint y)
 void glPrint(int x, int y, char *text)
 {
   std::string str(text);
+
   glDisable(GL_TEXTURE_2D); //added this
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
@@ -147,6 +150,8 @@ void glPrint(int x, int y, char *text)
 */
 int main(int argc, char *argv[])
 {
+
+  vbo = new std::vector<Vertex>();
   // Configuração iniciais do GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);

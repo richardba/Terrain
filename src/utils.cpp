@@ -1,5 +1,6 @@
-#include <gl/gl.h>
-#include <gl/glu.h>
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +8,7 @@
 
 #include "../include/utils.h"
 #include "../include/Terrain.h"
+#include "../include/Vbo.h"
 
 /* Constantes responsáveis pelo modo da câmera */
 #define FOLLOW          (0)
@@ -64,11 +66,33 @@ GLint glStartX       = -1;
 GLint glStartY;
 GLuint glTexture=1;
 Terrain glTerrain;
+GLuint shaderHandle;
+GLuint glVertexArray;
+GLuint glVertexBuffer;
 float glFoVX = 90.0f;
 long glEndTime;
 long glStartTime;
 unsigned char *glHeightMap;
 unsigned char *glHeightMaster;
+
+
+GLvoid shaderPlumbing()
+{
+	glPointSize(2);
+
+	//position data
+	glBindVertexArray(glVertexArray);
+	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex)*vbo->size(), vbo->data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle, "position"));
+	glVertexAttribPointer(glGetAttribLocation(shaderHandle, "position"), 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+
+	//color data
+//	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffers[1]);
+//	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(GLfloat)*nvertices, colors->data(), GL_STATIC_DRAW);
+//	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle, "color"));
+//	glVertexAttribPointer(glGetAttribLocation(shaderHandle, "color"), 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+}
 
 /**
 * Método responsável pela normalização do vetor de normais, onde dado um vetor com três posições, calcula-se o tamanho do vetor,

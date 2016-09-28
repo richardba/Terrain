@@ -5,8 +5,8 @@
 #define WINDOW_HEIGHT (480)
 #define WINDOW_WIDTH  (640)
 // Variáveis do pipeline gráfico
-extern GLuint vertexArrayId;
-extern GLuint vertexBuffer;
+extern GLuint glVertexArray;
+extern GLuint glVertexBuffer;
 extern GLuint colorBuffer;
 extern GLuint shaderHandle;
 
@@ -47,5 +47,6 @@ extern void renderMode(void);
 extern void renderScene(void);
 extern void roamDrawFrame();
 extern void SetupRC();
+extern GLvoid shaderPlumbing();
 extern void toggleLessDetail(void);
 extern void toggleMoreDetail(void);

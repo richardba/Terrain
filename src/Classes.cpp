@@ -140,73 +140,82 @@ void Patch::recursiveTessellate(TriTreeNode *tri, GLint leftX, GLint leftY, GLin
 void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint rightX,
                          GLint rightY, GLint apexX, GLint apexY)
 {
-    if (tri->leftChild)
-    {
-        GLint centerX =
-            (leftX + rightX) >> 1;
-        GLint centerY = (leftY + rightY) >> 1;
+  if (tri->leftChild)
+  {
+      GLint centerX =
+          (leftX + rightX) >> 1;
+      GLint centerY = (leftY + rightY) >> 1;
 
-        recursiveRender(tri->leftChild, apexX, apexY, leftX, leftY, centerX, centerY);
-        recursiveRender(tri->rightChild, rightX, rightY, apexX, apexY, centerX,
-                     centerY);
-    }
-    else
-    {
-        glNumTrisRendered++;
+      recursiveRender(tri->leftChild, apexX, apexY, leftX, leftY, centerX, centerY);
+      recursiveRender(tri->rightChild, rightX, rightY, apexX, apexY, centerX,
+                   centerY);
+  }
+  else
+  {
+      Vertex v1, v2, v3;
+      glNumTrisRendered++;
 
-        GLfloat leftZ = heightMap[(leftY * MAP_SIZE) + leftX];
-        GLfloat rightZ = heightMap[(rightY * MAP_SIZE) + rightX];
-        GLfloat apexZ = heightMap[(apexY * MAP_SIZE) + apexX];
+      GLfloat leftZ = heightMap[(leftY * MAP_SIZE) + leftX];
+      GLfloat rightZ = heightMap[(rightY * MAP_SIZE) + rightX];
+      GLfloat apexZ = heightMap[(apexY * MAP_SIZE) + apexX];
 
-        if (glDrawMode == DRAW_USE_LIGHTING)
-        {
-            float v[3][3];
-            float out[3];
+      if (glDrawMode == DRAW_USE_LIGHTING)
+      {
+          float v[3][3];
+          float out[3];
 
-            v[0][0] = (GLfloat)leftX;
-            v[0][1] = (GLfloat)leftZ;
-            v[0][2] = (GLfloat)leftY;
+          v[0][0] = (GLfloat)leftX;
+          v[0][1] = (GLfloat)leftZ;
+          v[0][2] = (GLfloat)leftY;
 
-            v[1][0] = (GLfloat)rightX;
-            v[1][1] = (GLfloat)rightZ;
-            v[1][2] = (GLfloat)rightY;
+          v[1][0] = (GLfloat)rightX;
+          v[1][1] = (GLfloat)rightZ;
+          v[1][2] = (GLfloat)rightY;
 
-            v[2][0] = (GLfloat)apexX;
-            v[2][1] = (GLfloat)apexZ;
-            v[2][2] = (GLfloat)apexY;
+          v[2][0] = (GLfloat)apexX;
+          v[2][1] = (GLfloat)apexZ;
+          v[2][2] = (GLfloat)apexY;
 
-            calcNormal(v, out);
-            glNormal3fv(out);
-        }
+          calcNormal(v, out);
+          glNormal3fv(out);
+      }
 
-        float fColor = (60.0f + leftZ) / 256.0f;
+      float fColor = (60.0f + leftZ) / 256.0f;
+      if (fColor > 1.0f) fColor = 1.0f;
+      glColor3f(fColor, fColor, fColor);
+
+      glVertex3f((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
+      v1.x = (GLfloat)leftX;
+      v1.y = (GLfloat)leftZ;
+      v1.z = (GLfloat)leftY;
+      vbo->push_back(v1);
+
+      if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
+      {
+        float fColor = (60.0f + rightZ) / 256.0f;
         if (fColor > 1.0f) fColor = 1.0f;
         glColor3f(fColor, fColor, fColor);
+      }
 
-        glVertex3f((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
+      glVertex3f((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
+      v2.x = (GLfloat)rightX;
+      v2.y = (GLfloat)rightZ;
+      v2.z = (GLfloat)rightY;
+      vbo->push_back(v2);
 
-        if (glDrawMode == DRAW_USE_TEXTURE ||
+      if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
+      {
+        float fColor = (60.0f + apexZ) / 256.0f;
+        if (fColor > 1.0f) fColor = 1.0f;
+        glColor3f(fColor, fColor, fColor);
+      }
 
-                glDrawMode == DRAW_USE_FILL_ONLY)
-        {
-            float fColor = (60.0f + rightZ) / 256.0f;
-            if (fColor > 1.0f) fColor = 1.0f;
-            glColor3f(fColor, fColor, fColor);
-        }
-
-        glVertex3f((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
-
-        if (glDrawMode == DRAW_USE_TEXTURE ||
-
-                glDrawMode == DRAW_USE_FILL_ONLY)
-        {
-            float fColor = (60.0f + apexZ) / 256.0f;
-            if (fColor > 1.0f) fColor = 1.0f;
-            glColor3f(fColor, fColor, fColor);
-        }
-
-        glVertex3f((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
-    }
+      glVertex3f((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
+      v3.x = (GLfloat)apexX;
+      v3.y = (GLfloat)apexZ;
+      v3.z = (GLfloat)apexY;
+      vbo->push_back(v3);
+  }
 }
 
 unsigned char Patch::recursiveComputeDiff(GLint leftX, GLint leftY,

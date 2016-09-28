@@ -385,7 +385,7 @@
 
 1474853648 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
 
-1474853435 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
+1474928547 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
 
 1474218963 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
 	"../include/Patch.h"
@@ -440,7 +440,7 @@
 	<climits>
 	"include/Terrain.h"
 
-1474853668 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\classes.cpp
+1474922187 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\classes.cpp
 	<windows.h>
 	<math.h>
 	<gl/gl.h>
@@ -450,10 +450,10 @@
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 
-1474853644 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
-	<gl/gl.h>
-	<gl/glut.h>
-	<gl/freeglut.h>
+1474929025 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
+	<GL/gl.h>
+	<GL/glut.h>
+	<GL/freeglut.h>
 	<math.h>
 	<stdio.h>
 	<stdlib.h>
@@ -944,6 +944,6 @@
 	"../include/utils.h"
 	"../include/Terrain.h"
 
-1474853711 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
+1474922212 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
 	<vector>
 
