@@ -4,6 +4,10 @@
 	fragment shaders, and then creates the shader. It also lets us bind and
 	unbind the GLSL shader program as required.
 */
+#include <GL/glew.h>
+#ifndef SHADER_H
+#define SHADER_H
+
 class Shader {
 public:
     Shader(); // Default constructor
@@ -15,12 +19,15 @@ public:
     void bind(); // Bind our GLSL shader program
     void unbind(); // Unbind our GLSL shader program
 
-    unsigned int id(); // Get the identifier for our program
+    GLuint id(); // Get the identifier for our program
 
 private:
-    unsigned int shader_id; // The shader program identifier
+    GLuint shader_id; // The shader program identifier
     unsigned int shader_vp; // The vertex shader identifier
     unsigned int shader_fp; // The fragment shader identifier
 
     bool inited; // Whether or not we have initialized the shader
 };
+
+extern Shader shaderHandle;
+#endif // SHADER_H

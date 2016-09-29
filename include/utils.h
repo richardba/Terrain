@@ -1,16 +1,15 @@
 /**
 * @author Ricardo Barros Duarte d'Oliveira
-* Arquivo contendo as v·riaveis globais e mÈtodos para n„o serem redefinidos
+* Arquivo contendo as v√°riaveis globais e m√©todos para n√£o serem redefinidos
 */
 #define WINDOW_HEIGHT (480)
 #define WINDOW_WIDTH  (640)
-// Vari·veis do pipeline gr·fico
+// Vari√°veis do pipeline gr√°fico
 extern GLuint glVertexArray;
 extern GLuint glVertexBuffer;
 extern GLuint colorBuffer;
-extern GLuint shaderHandle;
 
-// VarÌaveis compartilhadas
+// Var√≠aveis compartilhadas
 extern GLint glAnimate;
 extern GLint glFrames;
 extern GLint glRotate;
@@ -19,7 +18,7 @@ extern GLint glStartY;
 extern long glStartTime, glEndTime;
 extern unsigned char *glHeightMap;
 
-// MÈtodos
+// M√©todos
 extern GLint roamInit(unsigned char *map);
 extern void animateToggle(void);
 extern void calcNormal(float v[3][3], float out[3]);

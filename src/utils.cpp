@@ -9,8 +9,9 @@
 #include "../include/utils.h"
 #include "../include/Terrain.h"
 #include "../include/Vbo.h"
+#include "../include/Shader.h"
 
-/* Constantes respons·veis pelo modo da c‚mera */
+/* Constantes respons√°veis pelo modo da c√¢mera */
 #define FOLLOW          (0)
 #define OBSERVE         (1)
 #define DRIVE           (2)
@@ -22,30 +23,30 @@
 #define ZERO_F          (0.f)
 
 /**
-* Vari·veis globais
-* @glAnimationAngle   define o angulo da animaÁ„o, inicialmente zero
-* @glCameraPos        um array com as posiÁıes da camera
-* @glCameraRotation   um array de projeÁ„o, contendo o eixo de rotaÁ„o da camera
+* Vari√°veis globais
+* @glAnimationAngle   define o angulo da anima√ß√£o, inicialmente zero
+* @glCameraPos        um array com as posi√ß√µes da camera
+* @glCameraRotation   um array de proje√ß√£o, contendo o eixo de rota√ß√£o da camera
 * @glPerspective      define a perspectiva da camera
-* @glViewPosition     um array com as posiÁıes da view
-* @glAnimate          responsavel pela animaÁ„o do frustrum
-* @glCamera           modo de visualizaÁ„o da camera, esse modo pode ser navegavel ou observavel topologicamente
-* @glDrawFrustum      flag responsavel pela exibiÁ„o do Frustum, inicialmente ligado
-* @glDrawMode         modo de renderizaÁ„o da malha (e.g.: wireframe, textured)
+* @glViewPosition     um array com as posi√ß√µes da view
+* @glAnimate          responsavel pela anima√ß√£o do frustrum
+* @glCamera           modo de visualiza√ß√£o da camera, esse modo pode ser navegavel ou observavel topologicamente
+* @glDrawFrustum      flag responsavel pela exibi√ß√£o do Frustum, inicialmente ligado
+* @glDrawMode         modo de renderiza√ß√£o da malha (e.g.: wireframe, textured)
 * @glFrames           contador de frames da cena
-* @glFrameDiff        representa o inicio da diferenÁa de frames para calculo do framerate
-* @glNumTrisDesired   representa o n˙mero de triangulos para a subdivis„o por frame
-* @glNumTrisRendered  representa o n˙mero de triangulos renderizados para um determinado mesh
-* @glRotate           responsavel pela rotaÁ„o do frustrum
-* @glStartX           coordenada de posiÁ„o inicial da camera no modo navegavel
-* @glStartY           coordenada de posiÁ„o inicial da camera no modo navegavel
+* @glFrameDiff        representa o inicio da diferen√ßa de frames para calculo do framerate
+* @glNumTrisDesired   representa o n√∫mero de triangulos para a subdivis√£o por frame
+* @glNumTrisRendered  representa o n√∫mero de triangulos renderizados para um determinado mesh
+* @glRotate           responsavel pela rota√ß√£o do frustrum
+* @glStartX           coordenada de posi√ß√£o inicial da camera no modo navegavel
+* @glStartY           coordenada de posi√ß√£o inicial da camera no modo navegavel
 * @glTexture          define a textura
 * @glTerrain          define o terreno
-* @glFoVX             define o campo de vis„o
-* @glEndTime          representa o final do loop da aplicaÁ„o openGL
-* @glStartTime        representa o inicio do loop da aplicaÁ„o openGL
+* @glFoVX             define o campo de vis√£o
+* @glEndTime          representa o final do loop da aplica√ß√£o openGL
+* @glStartTime        representa o inicio do loop da aplica√ß√£o openGL
 * @glHeightMap        uma string que representa or arquivo do mapa de altura
-* @glHeightMaster     uma string para auxiliar nas operaÁıes de manipulaÁ„o do arquivo do mapa de altura
+* @glHeightMaster     uma string para auxiliar nas opera√ß√µes de manipula√ß√£o do arquivo do mapa de altura
 
 */
 GLfloat glAnimationAngle = ZERO_F;
@@ -66,7 +67,7 @@ GLint glStartX       = -1;
 GLint glStartY;
 GLuint glTexture=1;
 Terrain glTerrain;
-GLuint shaderHandle;
+Shader shaderHandle;
 GLuint glVertexArray;
 GLuint glVertexBuffer;
 float glFoVX = 90.0f;
@@ -78,14 +79,12 @@ unsigned char *glHeightMaster;
 
 GLvoid shaderPlumbing()
 {
-	glPointSize(2);
-
 	//position data
 	glBindVertexArray(glVertexArray);
 	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex)*vbo->size(), vbo->data(), GL_STATIC_DRAW);
-	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle, "position"));
-	glVertexAttribPointer(glGetAttribLocation(shaderHandle, "position"), 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vbo->size(), vbo->data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle.id(), "inPosition"));
+	glVertexAttribPointer(glGetAttribLocation(shaderHandle.id(), "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
 	//color data
 //	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffers[1]);
@@ -95,10 +94,10 @@ GLvoid shaderPlumbing()
 }
 
 /**
-* MÈtodo respons·vel pela normalizaÁ„o do vetor de normais, onde dado um vetor com trÍs posiÁıes, calcula-se o tamanho do vetor,
-* caso o tamanho seja zero, ent„o trataremos o tamanho como um para previnir divisıes por zero, ent„o obtemos o vetor de normais
-* resultante das divisıes sucessivas de cada elemento pelo tamanho onde o tamanho È a raiz quadrada da soma do quadrado de cada elemento.
-* @param vector   um vetor contendo trÍs posiÁıes para normalizaÁ„o do vetor de normais
+* M√©todo respons√°vel pela normaliza√ß√£o do vetor de normais, onde dado um vetor com tr√™s posi√ß√µes, calcula-se o tamanho do vetor,
+* caso o tamanho seja zero, ent√£o trataremos o tamanho como um para previnir divis√µes por zero, ent√£o obtemos o vetor de normais
+* resultante das divis√µes sucessivas de cada elemento pelo tamanho onde o tamanho √© a raiz quadrada da soma do quadrado de cada elemento.
+* @param vector   um vetor contendo tr√™s posi√ß√µes para normaliza√ß√£o do vetor de normais
 */
 void reduceToUnit(float vector[3])
 {
@@ -116,9 +115,9 @@ void reduceToUnit(float vector[3])
 }
 
 /**
-* MÈtodo respons·vel pelo calculo das normais onde dado uma matriz de trÍs posiÁıes se calcula dois vetores resultantes
-* e a partir desses vetores È feito um produto vetorial para obtenÁ„o do vetor de normais, que sera armazenado
-* na vari·vel normal, que ser· passada para o mÈtodo de normalizaÁ„o.
+* M√©todo respons√°vel pelo calculo das normais onde dado uma matriz de tr√™s posi√ß√µes se calcula dois vetores resultantes
+* e a partir desses vetores √© feito um produto vetorial para obten√ß√£o do vetor de normais, que sera armazenado
+* na vari√°vel normal, que ser√° passada para o m√©todo de normaliza√ß√£o.
 * @param vector uma matriz contendo as coordenadas dos pontos
 * @param normal o vetor resultante
 */
@@ -146,9 +145,9 @@ void calcNormal(float vector[3][3], float normal[3])
 
 
 /**
-* MÈtodo para leitura do Heightmap
+* M√©todo para leitura do Heightmap
 * @param size           tamanho do mapa
-* @param startPointer   ponteiro que representa o inicio da posiÁ„o em memoria do Heightmap
+* @param startPointer   ponteiro que representa o inicio da posi√ß√£o em memoria do Heightmap
 */
 void loadTerrain(GLint size, unsigned char **startPointer)
 {
@@ -184,7 +183,7 @@ void loadTerrain(GLint size, unsigned char **startPointer)
 }
 
 /**
-* MÈtodo para liberar o array do Height Field
+* M√©todo para liberar o array do Height Field
 */
 void freeTerrain()
 {
@@ -193,7 +192,7 @@ void freeTerrain()
 }
 
 /**
-* MÈtodo para mudanÁa no modo de renderizaÁ„o
+* M√©todo para mudan√ßa no modo de renderiza√ß√£o
 */
 void drawMode()
 {
@@ -235,8 +234,8 @@ void drawMode()
 }
 
 /**
-* InicializaÁ„o da implementaÁ„o do ROAM, onde checa-se algumas definiÁıes foram apropriadamente carregadas, aloca-se um espaÁo em memoria para a textura,
-* È gerado um padr„o randÙmico para a textura e padr„o È aplicado em um tom creme, para dar aspecto de solo
+* Inicializa√ß√£o da implementa√ß√£o do ROAM, onde checa-se algumas defini√ß√µes foram apropriadamente carregadas, aloca-se um espa√ßo em memoria para a textura,
+* √© gerado um padr√£o rand√¥mico para a textura e padr√£o √© aplicado em um tom creme, para dar aspecto de solo
 */
 GLint roamInit(unsigned char *map)
 {
@@ -278,7 +277,7 @@ GLint roamInit(unsigned char *map)
 }
 
 /**
-* MÈtodo respons·vel em fazer chamada de funÁıes respons·veis para renderizaÁ„o de um frame do cen·rio
+* M√©todo respons√°vel em fazer chamada de fun√ß√µes respons√°veis para renderiza√ß√£o de um frame do cen√°rio
 */
 void roamDrawFrame()
 {
@@ -288,7 +287,7 @@ void roamDrawFrame()
 }
 
 /**
-* MÈtodo para renderizaÁ„o do Frustum
+* M√©todo para renderiza√ß√£o do Frustum
 */
 void drawFrustum()
 {
