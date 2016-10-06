@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <glm/glm.hpp>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,7 +83,7 @@ GLvoid shaderPlumbing()
 	//position data
 	glBindVertexArray(glVertexArray);
 	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*vbo->size(), vbo->data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*vertexBuffer->size(), vertexBuffer->data(), GL_STATIC_DRAW);
 	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle.id(), "inPosition"));
 	glVertexAttribPointer(glGetAttribLocation(shaderHandle.id(), "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 

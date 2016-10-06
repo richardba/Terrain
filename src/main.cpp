@@ -12,7 +12,9 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/freeglut.h>
+#include <glm/glm.hpp>
 #include <math.h>
+#include <glm/glm.hpp>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +28,10 @@
 #include "../include/Vbo.h"
 
 using namespace std;
-std::vector<Vertex>* vbo;
+std::vector<glm::vec3>* vertexBuffer;
+std::vector<glm::vec3>* normals;
+std::vector<glm::vec3>* tangents;
+std::vector<glm::vec3>* bitangents;
 /**
 * Método para renderizar a cena
 */
@@ -151,7 +156,10 @@ void glPrint(int x, int y, char *text)
 int main(int argc, char *argv[])
 {
 
-  vbo = new std::vector<Vertex>();
+  vertexBuffer = new std::vector<glm::vec3>();
+  normals = new std::vector<glm::vec3>();
+  tangents = new std::vector<glm::vec3>();
+  bitangents = new std::vector<glm::vec3>();
   // Configuração iniciais do GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);

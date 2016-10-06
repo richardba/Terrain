@@ -152,7 +152,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
   }
   else
   {
-      Vertex v1, v2, v3;
+//      Vertex v1, v2, v3;
       glNumTrisRendered++;
 
       GLfloat leftZ = heightMap[(leftY * MAP_SIZE) + leftX];
@@ -178,6 +178,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
           calcNormal(v, out);
           glNormal3fv(out);
+          normals->push_back(glm::vec3(out[0], out[1], out[2]));
       }
 
       float fColor = (60.0f + leftZ) / 256.0f;
@@ -185,10 +186,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       glColor3f(fColor, fColor, fColor);
 
       glVertex3f((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
-      v1.x = (GLfloat)leftX;
-      v1.y = (GLfloat)leftZ;
-      v1.z = (GLfloat)leftY;
-      vbo->push_back(v1);
+      vertexBuffer->push_back(glm::vec3((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY));
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -198,10 +196,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       }
 
       glVertex3f((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
-      v2.x = (GLfloat)rightX;
-      v2.y = (GLfloat)rightZ;
-      v2.z = (GLfloat)rightY;
-      vbo->push_back(v2);
+      vertexBuffer->push_back(glm::vec3((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY));
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -211,10 +206,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       }
 
       glVertex3f((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
-      v3.x = (GLfloat)apexX;
-      v3.y = (GLfloat)apexZ;
-      v3.z = (GLfloat)apexY;
-      vbo->push_back(v3);
+      vertexBuffer->push_back(glm::vec3((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY));
   }
 }
 
@@ -325,6 +317,7 @@ void Patch::Tessellate()
                      patchWorldY + MESH_SIZE, 1);
 }
 
+// Mudar método responsavel
 void Patch::Render()
 {
     glPushMatrix();
