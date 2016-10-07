@@ -450,7 +450,7 @@
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 
-1474929025 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
+1475615278 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
 	<GL/gl.h>
 	<GL/glut.h>
 	<GL/freeglut.h>
@@ -934,15 +934,17 @@
 
 1471474414 c:\mingw\include\glm\simd\integer.h
 
-1474838612 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\utils.cpp
-	<gl/gl.h>
-	<gl/glu.h>
+1474939935 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\utils.cpp
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glu.h>
 	<math.h>
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"../include/utils.h"
 	"../include/Terrain.h"
+	"../include/Vbo.h"
 
 1474922212 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
 	<vector>
