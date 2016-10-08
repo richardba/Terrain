@@ -32,6 +32,7 @@ std::vector<glm::vec3>* vertexBuffer;
 std::vector<glm::vec3>* normals;
 std::vector<glm::vec3>* tangents;
 std::vector<glm::vec3>* bitangents;
+std::vector<glm::vec2>* uv;
 /**
 * Método para renderizar a cena
 */
@@ -155,11 +156,12 @@ void glPrint(int x, int y, char *text)
 */
 int main(int argc, char *argv[])
 {
-
   vertexBuffer = new std::vector<glm::vec3>();
   normals = new std::vector<glm::vec3>();
   tangents = new std::vector<glm::vec3>();
   bitangents = new std::vector<glm::vec3>();
+  uv = new std::vector<glm::vec2>();
+  appendUvData(uv);
   // Configuração iniciais do GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);

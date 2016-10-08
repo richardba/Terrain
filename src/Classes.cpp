@@ -22,6 +22,7 @@
 #include <climits>
 #include "../include/Terrain.h"
 #include "../include/Vbo.h"
+#include "../include/utils.h"
 
 inline GLint orientation(GLint pX, GLint pY, GLint qX, GLint qY, GLint rX, GLint rY)
 {
@@ -153,6 +154,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
   else
   {
 //      Vertex v1, v2, v3;
+      glm::vec3 vertex1, vertex2, vertex3, normal, tangent, bitangent;
       glNumTrisRendered++;
 
       GLfloat leftZ = heightMap[(leftY * MAP_SIZE) + leftX];
@@ -178,7 +180,8 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
           calcNormal(v, out);
           glNormal3fv(out);
-          normals->push_back(glm::vec3(out[0], out[1], out[2]));
+          normal=glm::vec3(out[0], out[1], out[2]);
+          normals->push_back(normal);
       }
 
       float fColor = (60.0f + leftZ) / 256.0f;
@@ -186,7 +189,8 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       glColor3f(fColor, fColor, fColor);
 
       glVertex3f((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
-      vertexBuffer->push_back(glm::vec3((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY));
+      vertex1 = glm::vec3((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
+      vertexBuffer->push_back(vertex1);
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -196,7 +200,8 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       }
 
       glVertex3f((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
-      vertexBuffer->push_back(glm::vec3((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY));
+      vertex2 = glm::vec3((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
+      vertexBuffer->push_back(vertex2);
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -206,7 +211,38 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       }
 
       glVertex3f((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
-      vertexBuffer->push_back(glm::vec3((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY));
+      vertex3 = glm::vec3((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
+      vertexBuffer->push_back(vertex3);
+
+      // Shortcuts for UVs
+      glm::vec2 uv0 = iterateUv();
+      glm::vec2 uv1 = iterateUv();
+      glm::vec2 uv2 = iterateUv();
+
+      // Edges of the triangle : postion delta
+      glm::vec3 deltaPos1 = vertex2-vertex1;
+      glm::vec3 deltaPos2 = vertex3-vertex1;
+
+      glm::vec2 deltaUV1 = uv1-uv0;
+      glm::vec2 deltaUV2 = uv2-uv0;
+
+      float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+      tangent = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
+      bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
+      tangent = glm::normalize(tangent - normal * glm::dot(normal, tangent));
+      if (glm::dot(glm::cross(normal, tangent), bitangent) < 0.0f){
+        tangent = tangent * -1.0f;
+      }
+      // Set the same tangent for all three vertices of the triangle.
+      // They will be merged later, in vboindexer.cpp
+      tangents->push_back(tangent);
+      tangents->push_back(tangent);
+      tangents->push_back(tangent);
+
+      // Same thing for binormals
+      bitangents->push_back(bitangent);
+      bitangents->push_back(bitangent);
+      bitangents->push_back(bitangent);
   }
 }
 
@@ -324,12 +360,14 @@ void Patch::Render()
 
     glTranslatef((GLfloat)patchWorldX, GL_ZERO, (GLfloat)patchWorldY);
     glBegin(GL_TRIANGLES);
-
+    vertexBuffer->clear();
+    normals->clear();
+    tangents->clear();
+    bitangents->clear();
     recursiveRender(&baseLeft, GL_ZERO, MESH_SIZE, MESH_SIZE, GL_ZERO, GL_ZERO, GL_ZERO);
 
     recursiveRender(&baseRight, MESH_SIZE, GL_ZERO, GL_ZERO, MESH_SIZE, MESH_SIZE,
                  MESH_SIZE);
-
     glEnd();
 
     glPopMatrix();

@@ -4,6 +4,8 @@
 */
 #define WINDOW_HEIGHT (480)
 #define WINDOW_WIDTH  (640)
+#include <vector>
+#include <glm/glm.hpp>
 // Variáveis do pipeline gráfico
 extern GLuint glVertexArray;
 extern GLuint glVertexBuffer;
@@ -49,3 +51,5 @@ extern void SetupRC();
 extern GLvoid shaderPlumbing();
 extern void toggleLessDetail(void);
 extern void toggleMoreDetail(void);
+extern void appendUvData(std::vector<glm::vec2>* uv);
+extern glm::vec2 iterateUv();

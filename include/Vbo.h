@@ -26,5 +26,7 @@ extern std::vector<glm::vec3>* vertexBuffer;
 extern std::vector<glm::vec3>* normals;
 extern std::vector<glm::vec3>* tangents;
 extern std::vector<glm::vec3>* bitangents;
+extern std::vector<glm::vec2>* uv;
+extern std::vector<glm::vec2>::iterator uvIterator;
 #endif
 
