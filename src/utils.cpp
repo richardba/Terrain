@@ -73,6 +73,10 @@ Terrain glTerrain;
 Shader shaderHandle;
 GLuint glVertexArray;
 GLuint glVertexBuffer;
+GLuint glUvBuffer;
+GLuint glNormalBuffer;
+GLuint glTangentBuffer;
+GLuint glBitangentBuffer;
 float glFoVX = 90.0f;
 long glEndTime;
 long glStartTime;
@@ -82,18 +86,52 @@ std::vector<glm::vec2>::iterator uvIterator;
 
 GLvoid shaderPlumbing()
 {
-	//position data
+	glGenVertexArrays(1, &glVertexArray);
 	glBindVertexArray(glVertexArray);
-	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*vertexBuffer->size(), vertexBuffer->data(), GL_STATIC_DRAW);
-	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle.id(), "inPosition"));
-	glVertexAttribPointer(glGetAttribLocation(shaderHandle.id(), "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	//color data
-//	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffers[1]);
-//	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(GLfloat)*nvertices, colors->data(), GL_STATIC_DRAW);
-//	glEnableVertexAttribArray(glGetAttribLocation(shaderHandle, "color"));
-//	glVertexAttribPointer(glGetAttribLocation(shaderHandle, "color"), 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	// Create and compile our GLSL program from the shaders
+	shaderHandle =  Shader( "NormalMapping.vertexshader", "NormalMapping.fragmentshader" );
+
+	//GLFW
+//	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+//	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+//	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
+//	GLuint ModelView3x3MatrixID = glGetUniformLocation(programID, "MV3x3");
+
+	// Load the texture
+	GLuint DiffuseTexture = loadDDS("diffuse.DDS");
+	GLuint NormalTexture = loadBMP_custom("normal.bmp");
+	GLuint SpecularTexture = loadDDS("specular.DDS");
+	//DYNAMIC_DRAW
+	//glBufferSubData(GLenum  target,  GLintptr  offset,  GLsizeiptr  size,  const GLvoid *  data);
+//
+//	glGenBuffers(1, &glVertexBuffer);
+//	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
+//	glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_DYNAMIC_DRAW);
+//
+//	GLuint uvbuffer;
+//	glGenBuffers(1, &uvbuffer);
+//	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+//	glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_DYNAMIC_DRAW);
+//
+//	GLuint normalbuffer;
+//	glGenBuffers(1, &normalbuffer);
+//	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+//	glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_DYNAMIC_DRAW);
+//
+//	GLuint tangentbuffer;
+//	glGenBuffers(1, &tangentbuffer);
+//	glBindBuffer(GL_ARRAY_BUFFER, tangentbuffer);
+//	glBufferData(GL_ARRAY_BUFFER, indexed_tangents.size() * sizeof(glm::vec3), &indexed_tangents[0], GL_DYNAMIC_DRAW);
+//
+//	GLuint bitangentbuffer;
+//	glGenBuffers(1, &bitangentbuffer);
+//	glBindBuffer(GL_ARRAY_BUFFER, bitangentbuffer);
+//	glBufferData(GL_ARRAY_BUFFER, indexed_bitangents.size() * sizeof(glm::vec3), &indexed_bitangents[0], GL_DYNAMIC_DRAW);
+//
+//	// Get a handle for our "LightPosition" uniform
+//	glUseProgram(programID);
+//	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 }
 
 /**
@@ -765,4 +803,14 @@ glm::vec2 iterateUv()
   uvVec = *uvIterator;
   std::advance(uvIterator,1);
   return uvVec;
+}
+
+GLuint loadDDS(std::string text)
+{
+  return 0;
+}
+
+GLuint loadBMP_custom(std::string text)
+{
+  return 0;
 }

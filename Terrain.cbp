@@ -43,6 +43,7 @@
 			<Add directory="C:/MinGW/lib" />
 		</Linker>
 		<Unit filename="include/Patch.h" />
+		<Unit filename="include/Pumbling.h" />
 		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Terrain.h" />
 		<Unit filename="include/Vbo.h" />

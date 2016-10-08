@@ -9,7 +9,10 @@
 // Variáveis do pipeline gráfico
 extern GLuint glVertexArray;
 extern GLuint glVertexBuffer;
-extern GLuint colorBuffer;
+extern GLuint glUvBuffer;
+extern GLuint glNormalBuffer;
+extern GLuint glTangentBuffer;
+extern GLuint glBitangentBuffer;
 
 // Varíaveis compartilhadas
 extern GLint glAnimate;
@@ -19,6 +22,7 @@ extern GLint glStartX;
 extern GLint glStartY;
 extern long glStartTime, glEndTime;
 extern unsigned char *glHeightMap;
+
 
 // Métodos
 extern GLint roamInit(unsigned char *map);
@@ -53,3 +57,5 @@ extern void toggleLessDetail(void);
 extern void toggleMoreDetail(void);
 extern void appendUvData(std::vector<glm::vec2>* uv);
 extern glm::vec2 iterateUv();
+extern GLuint loadDDS(std::string);
+extern GLuint loadBMP_custom(std::string);

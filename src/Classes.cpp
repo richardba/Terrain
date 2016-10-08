@@ -236,12 +236,8 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       // Set the same tangent for all three vertices of the triangle.
       // They will be merged later, in vboindexer.cpp
       tangents->push_back(tangent);
-      tangents->push_back(tangent);
-      tangents->push_back(tangent);
 
       // Same thing for binormals
-      bitangents->push_back(bitangent);
-      bitangents->push_back(bitangent);
       bitangents->push_back(bitangent);
   }
 }
