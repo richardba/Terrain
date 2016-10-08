@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
+#include <vector>
 
 #include "../include/utils.h"
 #include "../include/Terrain.h"
@@ -76,7 +78,7 @@ long glEndTime;
 long glStartTime;
 unsigned char *glHeightMap;
 unsigned char *glHeightMaster;
-
+std::vector<glm::vec2>::iterator uvIterator;
 
 GLvoid shaderPlumbing()
 {
@@ -708,4 +710,59 @@ void SetupRC()
 
     glTexGeni( GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR );
     glTexGenfv( GL_T, GL_OBJECT_PLANE, t_vector );
+}
+
+void appendUvData(std::vector<glm::vec2>* uv)
+{
+  uv->push_back(glm::vec2(2.240672,-0.000043));
+  uv->push_back(glm::vec2(2.240671,0.999957));
+  uv->push_back(glm::vec2(2.124629,0.999957));
+  uv->push_back(glm::vec2(2.124630,-0.000043));
+  uv->push_back(glm::vec2(2.008586,0.999957));
+  uv->push_back(glm::vec2(2.008587,-0.000043));
+  uv->push_back(glm::vec2(1.892544,0.999957));
+  uv->push_back(glm::vec2(1.892545,-0.000043));
+  uv->push_back(glm::vec2(1.776502,0.999957));
+  uv->push_back(glm::vec2(1.776503,-0.000043));
+  uv->push_back(glm::vec2(1.660459,0.999957));
+  uv->push_back(glm::vec2(1.660460,-0.000043));
+  uv->push_back(glm::vec2(1.544417,0.999957));
+  uv->push_back(glm::vec2(1.544418,-0.000043));
+  uv->push_back(glm::vec2(1.428374,0.999957));
+  uv->push_back(glm::vec2(1.428375,-0.000043));
+  uv->push_back(glm::vec2(1.312332,0.999957));
+  uv->push_back(glm::vec2(1.312333,-0.000043));
+  uv->push_back(glm::vec2(1.196290,0.999958));
+  uv->push_back(glm::vec2(1.196290,-0.000043));
+  uv->push_back(glm::vec2(1.080248,0.999958));
+  uv->push_back(glm::vec2(1.080248,-0.000043));
+  uv->push_back(glm::vec2(0.964206,0.999958));
+  uv->push_back(glm::vec2(0.964206,-0.000043));
+  uv->push_back(glm::vec2(0.848163,0.999958));
+  uv->push_back(glm::vec2(0.848163,-0.000043));
+  uv->push_back(glm::vec2(0.732121,0.999958));
+  uv->push_back(glm::vec2(0.732121,-0.000043));
+  uv->push_back(glm::vec2(0.616079,0.999958));
+  uv->push_back(glm::vec2(0.616079,-0.000043));
+  uv->push_back(glm::vec2(0.500037,0.999958));
+  uv->push_back(glm::vec2(0.500036,-0.000043));
+  uv->push_back(glm::vec2(0.383995,0.999958));
+  uv->push_back(glm::vec2(0.383994,-0.000043));
+  uv->push_back(glm::vec2(0.267953,0.999958));
+  uv->push_back(glm::vec2(0.267952,-0.000043));
+  uv->push_back(glm::vec2(0.151911,0.999958));
+  uv->push_back(glm::vec2(0.151909,-0.000043));
+  uv->push_back(glm::vec2(0.035868,0.999958));
+  uv->push_back(glm::vec2(0.035867,-0.000043));
+  uvIterator=uv->begin();
+}
+
+glm::vec2 iterateUv()
+{
+  glm::vec2 uvVec;
+  if(uvIterator==uv->end())
+    uvIterator=uv->begin();
+  uvVec = *uvIterator;
+  std::advance(uvIterator,1);
+  return uvVec;
 }
