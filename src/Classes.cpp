@@ -181,7 +181,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
           calcNormal(v, out);
           glNormal3fv(out);
           normal=glm::vec3(out[0], out[1], out[2]);
-          normals->push_back(normal);
+          glNormalArray->push_back(normal);
       }
 
       float fColor = (60.0f + leftZ) / 256.0f;
@@ -190,7 +190,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
       glVertex3f((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
       vertex1 = glm::vec3((GLfloat)leftX, (GLfloat)leftZ, (GLfloat)leftY);
-      vertexBuffer->push_back(vertex1);
+      glVertexArray->push_back(vertex1);
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -201,7 +201,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
       glVertex3f((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
       vertex2 = glm::vec3((GLfloat)rightX, (GLfloat)rightZ, (GLfloat)rightY);
-      vertexBuffer->push_back(vertex2);
+      glVertexArray->push_back(vertex2);
 
       if (glDrawMode == DRAW_USE_TEXTURE || glDrawMode == DRAW_USE_FILL_ONLY)
       {
@@ -212,7 +212,7 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
       glVertex3f((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
       vertex3 = glm::vec3((GLfloat)apexX, (GLfloat)apexZ, (GLfloat)apexY);
-      vertexBuffer->push_back(vertex3);
+      glVertexArray->push_back(vertex3);
 
       // Shortcuts for UVs
       glm::vec2 uv0 = iterateUv();
@@ -235,10 +235,10 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
       }
       // Set the same tangent for all three vertices of the triangle.
       // They will be merged later, in vboindexer.cpp
-      tangents->push_back(tangent);
+      glTangentArray->push_back(tangent);
 
       // Same thing for binormals
-      bitangents->push_back(bitangent);
+      glBitangentArray->push_back(bitangent);
   }
 }
 
@@ -356,10 +356,10 @@ void Patch::Render()
 
     glTranslatef((GLfloat)patchWorldX, GL_ZERO, (GLfloat)patchWorldY);
     glBegin(GL_TRIANGLES);
-    vertexBuffer->clear();
-    normals->clear();
-    tangents->clear();
-    bitangents->clear();
+    glVertexArray->clear();
+    glNormalArray->clear();
+    glTangentArray->clear();
+    glBitangentArray->clear();
     recursiveRender(&baseLeft, GL_ZERO, MESH_SIZE, MESH_SIZE, GL_ZERO, GL_ZERO, GL_ZERO);
 
     recursiveRender(&baseRight, MESH_SIZE, GL_ZERO, GL_ZERO, MESH_SIZE, MESH_SIZE,

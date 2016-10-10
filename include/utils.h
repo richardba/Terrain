@@ -7,12 +7,23 @@
 #include <vector>
 #include <glm/glm.hpp>
 // Variáveis do pipeline gráfico
-extern GLuint glVertexArray;
+extern GLuint glLightID;
 extern GLuint glVertexBuffer;
 extern GLuint glUvBuffer;
 extern GLuint glNormalBuffer;
 extern GLuint glTangentBuffer;
 extern GLuint glBitangentBuffer;
+extern GLuint diffuseTexture[2];
+extern GLuint normalTexture[2];
+extern GLuint specularTexture[2];
+
+// Matrizes
+extern GLuint matrixId;
+extern GLuint viewMatrixId;
+extern GLuint modelMatrixId;
+extern GLuint modelView3x3MatrixId;
+extern glm::mat4 ViewMatrix;
+extern glm::mat4 ProjectionMatrix;
 
 // Varíaveis compartilhadas
 extern GLint glAnimate;
@@ -22,7 +33,6 @@ extern GLint glStartX;
 extern GLint glStartY;
 extern long glStartTime, glEndTime;
 extern unsigned char *glHeightMap;
-
 
 // Métodos
 extern GLint roamInit(unsigned char *map);
@@ -55,7 +65,14 @@ extern void SetupRC();
 extern GLvoid shaderPlumbing();
 extern void toggleLessDetail(void);
 extern void toggleMoreDetail(void);
-extern void appendUvData(std::vector<glm::vec2>* uv);
+extern void appendUvData(std::vector<glm::vec2>* glUvArray);
 extern glm::vec2 iterateUv();
-extern GLuint loadDDS(std::string);
-extern GLuint loadBMP_custom(std::string);
+extern void computeMatricesFromInputs();
+extern void terminateShader();
+struct Mouse
+{
+  GLint x;
+  GLint y;
+};
+
+extern Mouse mouse;

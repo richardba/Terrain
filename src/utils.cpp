@@ -8,11 +8,14 @@
 #include <string.h>
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "../include/utils.h"
 #include "../include/Terrain.h"
 #include "../include/Vbo.h"
 #include "../include/Shader.h"
+#include "../include/texture.h"
 
 /* Constantes responsáveis pelo modo da câmera */
 #define FOLLOW          (0)
@@ -71,67 +74,217 @@ GLint glStartY;
 GLuint glTexture=1;
 Terrain glTerrain;
 Shader shaderHandle;
-GLuint glVertexArray;
+GLuint glVertexArrayBuffer;
 GLuint glVertexBuffer;
 GLuint glUvBuffer;
 GLuint glNormalBuffer;
 GLuint glTangentBuffer;
 GLuint glBitangentBuffer;
+GLuint glLightID;
+
+// Texture Handlers
+GLuint diffuseTexture[2];
+GLuint normalTexture[2];
+GLuint specularTexture[2];
+
+GLuint matrixId;
+GLuint viewMatrixId;
+GLuint modelMatrixId;
+GLuint modelView3x3MatrixId;
+
+glm::mat4 ViewMatrix;
+glm::mat4 ProjectionMatrix;
+
 float glFoVX = 90.0f;
 long glEndTime;
 long glStartTime;
 unsigned char *glHeightMap;
 unsigned char *glHeightMaster;
-std::vector<glm::vec2>::iterator uvIterator;
+std::vector<glm::vec2>::iterator glUvIterator;
 
 GLvoid shaderPlumbing()
 {
-	glGenVertexArrays(1, &glVertexArray);
-	glBindVertexArray(glVertexArray);
+	glGenVertexArrays(1, &glVertexArrayBuffer);
+	glBindVertexArray(glVertexArrayBuffer);
 
 	// Create and compile our GLSL program from the shaders
 	shaderHandle =  Shader( "NormalMapping.vertexshader", "NormalMapping.fragmentshader" );
 
 	//GLFW
-//	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-//	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-//	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-//	GLuint ModelView3x3MatrixID = glGetUniformLocation(programID, "MV3x3");
+	matrixId = glGetUniformLocation(shaderHandle.id(), "MVP");
+	viewMatrixId = glGetUniformLocation(shaderHandle.id(), "V");
+	modelMatrixId = glGetUniformLocation(shaderHandle.id(), "M");
+	modelMatrixId = glGetUniformLocation(shaderHandle.id(), "MV3x3");
 
 	// Load the texture
-	GLuint DiffuseTexture = loadDDS("diffuse.DDS");
-	GLuint NormalTexture = loadBMP_custom("normal.bmp");
-	GLuint SpecularTexture = loadDDS("specular.DDS");
-	//DYNAMIC_DRAW
-	//glBufferSubData(GLenum  target,  GLintptr  offset,  GLsizeiptr  size,  const GLvoid *  data);
-//
-//	glGenBuffers(1, &glVertexBuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
-//	glBufferData(GL_ARRAY_BUFFER, indexed_vertices.size() * sizeof(glm::vec3), &indexed_vertices[0], GL_DYNAMIC_DRAW);
-//
-//	GLuint uvbuffer;
-//	glGenBuffers(1, &uvbuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-//	glBufferData(GL_ARRAY_BUFFER, indexed_uvs.size() * sizeof(glm::vec2), &indexed_uvs[0], GL_DYNAMIC_DRAW);
-//
-//	GLuint normalbuffer;
-//	glGenBuffers(1, &normalbuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-//	glBufferData(GL_ARRAY_BUFFER, indexed_normals.size() * sizeof(glm::vec3), &indexed_normals[0], GL_DYNAMIC_DRAW);
-//
-//	GLuint tangentbuffer;
-//	glGenBuffers(1, &tangentbuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, tangentbuffer);
-//	glBufferData(GL_ARRAY_BUFFER, indexed_tangents.size() * sizeof(glm::vec3), &indexed_tangents[0], GL_DYNAMIC_DRAW);
-//
-//	GLuint bitangentbuffer;
-//	glGenBuffers(1, &bitangentbuffer);
-//	glBindBuffer(GL_ARRAY_BUFFER, bitangentbuffer);
-//	glBufferData(GL_ARRAY_BUFFER, indexed_bitangents.size() * sizeof(glm::vec3), &indexed_bitangents[0], GL_DYNAMIC_DRAW);
-//
-//	// Get a handle for our "LightPosition" uniform
-//	glUseProgram(programID);
-//	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+	diffuseTexture [0] = loadDDS("diffuse.DDS");
+	normalTexture  [0] = loadBMP_custom("normal.bmp");
+	specularTexture[0] = loadDDS("specular.DDS");
+
+  diffuseTexture [1]  = glGetUniformLocation(shaderHandle.id(), "diffuseTextureSampler");
+	normalTexture  [1]  = glGetUniformLocation(shaderHandle.id(), "normalTextureSampler");
+	specularTexture[1]  = glGetUniformLocation(shaderHandle.id(), "specularTextureSampler");
+//	DYNAMIC_DRAW
+//	glBufferSubData(GLenum  target,  GLintptr  offset,  GLsizeiptr  size,  const GLvoid *  data);
+
+	glGenBuffers(1, &glVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, glNumTrisDesired*3, glVertexArray->data(), GL_DYNAMIC_DRAW);
+
+	glGenBuffers(1, &glUvBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, glUvBuffer);
+	glBufferData(GL_ARRAY_BUFFER, glUvArray->size() * sizeof(glm::vec2), glUvArray->data(), GL_DYNAMIC_DRAW);
+
+	GLuint normalbuffer;
+	glGenBuffers(1, &glNormalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, glNormalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, glNumTrisDesired, glNormalArray->data(), GL_DYNAMIC_DRAW);
+
+	GLuint tangentbuffer;
+	glGenBuffers(1, &glTangentBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, glTangentBuffer);
+	glBufferData(GL_ARRAY_BUFFER, glNumTrisDesired, glTangentArray->data(), GL_DYNAMIC_DRAW);
+
+	GLuint bitangentbuffer;
+	glGenBuffers(1, &glBitangentBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, glBitangentBuffer);
+	glBufferData(GL_ARRAY_BUFFER, glNumTrisDesired, glBitangentArray->data(), GL_DYNAMIC_DRAW);
+
+	// Get a handle for our "LightPosition" uniform
+	glUseProgram(shaderHandle.id());
+	glLightID = glGetUniformLocation(shaderHandle.id(), "LightPosition_worldspace");
+}
+
+void shaderAttrib()
+{
+		// Use our shader
+		glUseProgram(shaderHandle.id());
+		// Compute the MVP matrix from keyboard and mouse input
+		computeMatricesFromInputs();
+		glm::mat4 ModelMatrix = glm::mat4(1.0);
+		glm::mat4 ModelViewMatrix = ViewMatrix * ModelMatrix;
+		glm::mat3 ModelView3x3Matrix = glm::mat3(ModelViewMatrix);
+		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		// Send our transformation to the currently bound shader,
+		// in the "MVP" uniform
+		glUniformMatrix4fv(matrixId, 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(modelMatrixId, 1, GL_FALSE, &ModelMatrix[0][0]);
+		glUniformMatrix4fv(viewMatrixId, 1, GL_FALSE, &ViewMatrix[0][0]);
+		glUniformMatrix4fv(viewMatrixId, 1, GL_FALSE, &ViewMatrix[0][0]);
+		glUniformMatrix3fv(modelView3x3MatrixId, 1, GL_FALSE, &ModelView3x3Matrix[0][0]);
+
+
+		glm::vec3 lightPos = glm::vec3(0,0,4);
+		glUniform3f(glLightID, lightPos.x, lightPos.y, lightPos.z);
+
+		// Bind our diffuse texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseTexture[0]);
+		// Set our "DiffuseTextureSampler" sampler to user Texture Unit 0
+		glUniform1i(diffuseTexture[1], 0);
+
+		// Bind our normal texture in Texture Unit 1
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalTexture[0]);
+		// Set our "Normal	TextureSampler" sampler to user Texture Unit 0
+		glUniform1i(normalTexture[1], 1);
+
+		// Bind our normal texture in Texture Unit 2
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, specularTexture[0]);
+		// Set our "Normal	TextureSampler" sampler to user Texture Unit 0
+		glUniform1i(specularTexture[1], 2);
+
+
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, glVertexBuffer);
+		glVertexAttribPointer(
+			0,                  // attribute
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+    glBufferSubData(GL_ARRAY_BUFFER,  GL_ZERO,  glVertexArray->size() * sizeof(glm::vec3),  glVertexArray->data());
+
+		// 2nd attribute buffer : UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, glUvBuffer);
+		glVertexAttribPointer(
+			1,                                // attribute
+			2,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+    glBufferSubData(GL_ARRAY_BUFFER,  GL_ZERO,  glUvArray->size() * sizeof(glm::vec2),  glUvArray->data());
+
+		// 3rd attribute buffer : normals
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, glNormalBuffer);
+		glVertexAttribPointer(
+			2,                                // attribute
+			3,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+    glBufferSubData(GL_ARRAY_BUFFER,  GL_ZERO,  glNormalArray->size() * sizeof(glm::vec3),  glNormalArray->data());
+
+
+		// 4th attribute buffer : tangents
+		glEnableVertexAttribArray(3);
+		glBindBuffer(GL_ARRAY_BUFFER, glTangentBuffer);
+		glVertexAttribPointer(
+			3,                                // attribute
+			3,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+		glBufferSubData(GL_ARRAY_BUFFER,  GL_ZERO,  glTangentArray->size() * sizeof(glm::vec3),  glTangentArray->data());
+
+		// 5th attribute buffer : bitangents
+		glEnableVertexAttribArray(4);
+		glBindBuffer(GL_ARRAY_BUFFER, glBitangentBuffer);
+		glVertexAttribPointer(
+			4,                                // attribute
+			3,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+		glBufferSubData(GL_ARRAY_BUFFER,  GL_ZERO,  glBitangentArray->size() * sizeof(glm::vec3),  glBitangentArray->data());
+
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
+		glDisableVertexAttribArray(4);
+
+		glUseProgram(0);
+}
+
+void terminateShader()
+{
+  glDeleteBuffers(1, &glVertexBuffer);
+	glDeleteBuffers(1, &glUvBuffer);
+	glDeleteBuffers(1, &glNormalBuffer);
+	glDeleteBuffers(1, &glTangentBuffer);
+	glDeleteBuffers(1, &glBitangentBuffer);
+	glDeleteProgram(shaderHandle.id());
+	glDeleteTextures(1, &diffuseTexture[0]);
+	glDeleteTextures(1, &normalTexture[0]);
+	glDeleteTextures(1, &specularTexture[0]);
+	glDeleteVertexArrays(1, &glVertexArrayBuffer);
 }
 
 /**
@@ -325,6 +478,7 @@ void roamDrawFrame()
     glTerrain.Reset();
     glTerrain.Tessellate();
     glTerrain.Render();
+    //shaderAttrib();
 }
 
 /**
@@ -585,6 +739,7 @@ void changeSize(GLsizei w, GLsizei h)
 
     fAspect = (GLfloat)w/(GLfloat)h;
 
+    //CHANGE TO USE SHADER
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -600,7 +755,7 @@ void changeSize(GLsizei w, GLsizei h)
         left = -right;
         glFrustum(left, right, bottom, top, NEAR_CLIP, FAR_CLIP);
     }
-
+    //CHANGE TO USE SHADER
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -621,6 +776,7 @@ void renderScene(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    //CHANGE TO USE SHADER
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
@@ -750,67 +906,110 @@ void SetupRC()
     glTexGenfv( GL_T, GL_OBJECT_PLANE, t_vector );
 }
 
-void appendUvData(std::vector<glm::vec2>* uv)
+void appendUvData(std::vector<glm::vec2>* glUvArray)
 {
-  uv->push_back(glm::vec2(2.240672,-0.000043));
-  uv->push_back(glm::vec2(2.240671,0.999957));
-  uv->push_back(glm::vec2(2.124629,0.999957));
-  uv->push_back(glm::vec2(2.124630,-0.000043));
-  uv->push_back(glm::vec2(2.008586,0.999957));
-  uv->push_back(glm::vec2(2.008587,-0.000043));
-  uv->push_back(glm::vec2(1.892544,0.999957));
-  uv->push_back(glm::vec2(1.892545,-0.000043));
-  uv->push_back(glm::vec2(1.776502,0.999957));
-  uv->push_back(glm::vec2(1.776503,-0.000043));
-  uv->push_back(glm::vec2(1.660459,0.999957));
-  uv->push_back(glm::vec2(1.660460,-0.000043));
-  uv->push_back(glm::vec2(1.544417,0.999957));
-  uv->push_back(glm::vec2(1.544418,-0.000043));
-  uv->push_back(glm::vec2(1.428374,0.999957));
-  uv->push_back(glm::vec2(1.428375,-0.000043));
-  uv->push_back(glm::vec2(1.312332,0.999957));
-  uv->push_back(glm::vec2(1.312333,-0.000043));
-  uv->push_back(glm::vec2(1.196290,0.999958));
-  uv->push_back(glm::vec2(1.196290,-0.000043));
-  uv->push_back(glm::vec2(1.080248,0.999958));
-  uv->push_back(glm::vec2(1.080248,-0.000043));
-  uv->push_back(glm::vec2(0.964206,0.999958));
-  uv->push_back(glm::vec2(0.964206,-0.000043));
-  uv->push_back(glm::vec2(0.848163,0.999958));
-  uv->push_back(glm::vec2(0.848163,-0.000043));
-  uv->push_back(glm::vec2(0.732121,0.999958));
-  uv->push_back(glm::vec2(0.732121,-0.000043));
-  uv->push_back(glm::vec2(0.616079,0.999958));
-  uv->push_back(glm::vec2(0.616079,-0.000043));
-  uv->push_back(glm::vec2(0.500037,0.999958));
-  uv->push_back(glm::vec2(0.500036,-0.000043));
-  uv->push_back(glm::vec2(0.383995,0.999958));
-  uv->push_back(glm::vec2(0.383994,-0.000043));
-  uv->push_back(glm::vec2(0.267953,0.999958));
-  uv->push_back(glm::vec2(0.267952,-0.000043));
-  uv->push_back(glm::vec2(0.151911,0.999958));
-  uv->push_back(glm::vec2(0.151909,-0.000043));
-  uv->push_back(glm::vec2(0.035868,0.999958));
-  uv->push_back(glm::vec2(0.035867,-0.000043));
-  uvIterator=uv->begin();
+  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
+  glUvArray->push_back(glm::vec2(2.240671,0.999957));
+  glUvArray->push_back(glm::vec2(2.124629,0.999957));
+  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
+  glUvArray->push_back(glm::vec2(2.008586,0.999957));
+  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
+  glUvArray->push_back(glm::vec2(1.892544,0.999957));
+  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
+  glUvArray->push_back(glm::vec2(1.776502,0.999957));
+  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
+  glUvArray->push_back(glm::vec2(1.660459,0.999957));
+  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
+  glUvArray->push_back(glm::vec2(1.544417,0.999957));
+  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
+  glUvArray->push_back(glm::vec2(1.428374,0.999957));
+  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
+  glUvArray->push_back(glm::vec2(1.312332,0.999957));
+  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
+  glUvArray->push_back(glm::vec2(1.196290,0.999958));
+  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
+  glUvArray->push_back(glm::vec2(1.080248,0.999958));
+  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
+  glUvArray->push_back(glm::vec2(0.964206,0.999958));
+  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
+  glUvArray->push_back(glm::vec2(0.848163,0.999958));
+  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
+  glUvArray->push_back(glm::vec2(0.732121,0.999958));
+  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
+  glUvArray->push_back(glm::vec2(0.616079,0.999958));
+  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
+  glUvArray->push_back(glm::vec2(0.500037,0.999958));
+  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
+  glUvArray->push_back(glm::vec2(0.383995,0.999958));
+  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
+  glUvArray->push_back(glm::vec2(0.267953,0.999958));
+  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
+  glUvArray->push_back(glm::vec2(0.151911,0.999958));
+  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
+  glUvArray->push_back(glm::vec2(0.035868,0.999958));
+  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
+  glUvIterator=glUvArray->begin();
 }
 
 glm::vec2 iterateUv()
 {
   glm::vec2 uvVec;
-  if(uvIterator==uv->end())
-    uvIterator=uv->begin();
-  uvVec = *uvIterator;
-  std::advance(uvIterator,1);
+  if(glUvIterator==glUvArray->end())
+    glUvIterator=glUvArray->begin();
+  uvVec = *glUvIterator;
+  std::advance(glUvIterator,1);
   return uvVec;
 }
 
-GLuint loadDDS(std::string text)
+
+void computeMatricesFromInputs()
 {
-  return 0;
+  float mouseSpeed = 0.005f;
+  float initialFoV = 45.0f;
+  float horizontalAngle = 3.14f;
+// Initial vertical angle : none
+float verticalAngle = 0.0f;
+  glm::vec3 position = glm::vec3( glViewPosition[0], glViewPosition[1], glViewPosition[2] );
+	// glfwGetTime is called only once, the first time this function is called
+	static long lastTime = std::time(GL_ZERO);
+
+	// Compute time difference between current and last frame
+	long currentTime = std::time(GL_ZERO);
+	float deltaTime = float(currentTime - lastTime);
+
+	// Get mouse position
+	double xpos= (double)mouse.x, ypos=(double)mouse.y;
+
+	// Compute new orientation
+	horizontalAngle += mouseSpeed * float(1024/2 - xpos );
+	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
+
+	// Direction : Spherical coordinates to Cartesian coordinates conversion
+	glm::vec3 direction(
+		cos(verticalAngle) * sin(horizontalAngle),
+		sin(verticalAngle),
+		cos(verticalAngle) * cos(horizontalAngle)
+	);
+
+	// Right vector
+	glm::vec3 right = glm::vec3(
+		sin(horizontalAngle - 3.14f/2.0f),
+		0,
+		cos(horizontalAngle - 3.14f/2.0f)
+	);
+  glm::vec3 up = glm::cross( right, direction );
+	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
+	// Camera matrix
+	ViewMatrix       = glm::lookAt(
+								position,           // Camera is here
+								position+direction, // and looks here : at the same position, plus "direction"
+								up                  // Head is up (set to 0,-1,0 to look upside-down)
+						   );
+
+	// For the next frame, the "last time" will be "now"
+	lastTime = currentTime;
 }
 
-GLuint loadBMP_custom(std::string text)
-{
-  return 0;
-}

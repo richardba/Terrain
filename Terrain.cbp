@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/Terrain" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="C:/MinGW/bin" />
+				<Option working_dir="bin/Debug" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -17,8 +17,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Terrain" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="C:/MinGW/bin" />
+				<Option output="Terrain" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="C:/Users/richardba/Documents/Faculdade/UFBA/MATE21/Projeto/Terrain" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
@@ -43,14 +43,15 @@
 			<Add directory="C:/MinGW/lib" />
 		</Linker>
 		<Unit filename="include/Patch.h" />
-		<Unit filename="include/Pumbling.h" />
 		<Unit filename="include/Shader.h" />
 		<Unit filename="include/Terrain.h" />
 		<Unit filename="include/Vbo.h" />
+		<Unit filename="include/texture.h" />
 		<Unit filename="include/utils.h" />
 		<Unit filename="src/Classes.cpp" />
 		<Unit filename="src/Shader.cpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/texture.cpp" />
 		<Unit filename="src/utils.cpp" />
 		<Extensions>
 			<code_completion />

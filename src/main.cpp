@@ -28,11 +28,12 @@
 #include "../include/Vbo.h"
 
 using namespace std;
-std::vector<glm::vec3>* vertexBuffer;
-std::vector<glm::vec3>* normals;
-std::vector<glm::vec3>* tangents;
-std::vector<glm::vec3>* bitangents;
-std::vector<glm::vec2>* uv;
+std::vector<glm::vec3>* glVertexArray;
+std::vector<glm::vec3>* glNormalArray;
+std::vector<glm::vec3>* glTangentArray;
+std::vector<glm::vec3>* glBitangentArray;
+std::vector<glm::vec2>* glUvArray;
+Mouse mouse;
 /**
 * Método para renderizar a cena
 */
@@ -87,6 +88,7 @@ void GLUTKeySpecialDown(GLint key, GLint x, GLint y)
   switch (key)
   {
     case GLUT_KEY_UP:
+
       KeyForward();//KeyUp();
       break;
     case GLUT_KEY_DOWN:
@@ -123,6 +125,12 @@ void GLUTMouseClick(GLint button, GLint state, GLint x, GLint y)
   }
 }
 
+void mousePosition(GLint x, GLint y)
+{
+  mouse.x = x;
+  mouse.y = y;
+}
+
 void glPrint(int x, int y, char *text)
 {
   std::string str(text);
@@ -156,18 +164,18 @@ void glPrint(int x, int y, char *text)
 */
 int main(int argc, char *argv[])
 {
-  vertexBuffer = new std::vector<glm::vec3>();
-  normals = new std::vector<glm::vec3>();
-  tangents = new std::vector<glm::vec3>();
-  bitangents = new std::vector<glm::vec3>();
-  uv = new std::vector<glm::vec2>();
-  appendUvData(uv);
+  glVertexArray = new std::vector<glm::vec3>();
+  glNormalArray = new std::vector<glm::vec3>();
+  glTangentArray = new std::vector<glm::vec3>();
+  glBitangentArray = new std::vector<glm::vec3>();
+  glUvArray = new std::vector<glm::vec2>();
+  appendUvData(glUvArray);
   // Configuração iniciais do GLUT
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(GL_ZERO, GL_ZERO);
   glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
+  //shaderPlumbing();
   if (glutCreateWindow("Renderizar Terreno conforme ROAM") < GL_ZERO)
   {
     printf("ERROR: No window system found!\n");
@@ -182,6 +190,7 @@ int main(int argc, char *argv[])
   glutSpecialFunc(GLUTKeySpecialDown);
   glutMouseFunc(GLUTMouseClick);
   glutMotionFunc(mouseMove);
+  glutPassiveMotionFunc(mousePosition);
   glutDisplayFunc(sceneRenderer);
   // Configuração do OpenGL
   SetupRC();
@@ -204,6 +213,12 @@ int main(int argc, char *argv[])
 
   freeTerrain();
 
+  glVertexArray->clear();
+  glNormalArray->clear();
+  glTangentArray->clear();
+  glBitangentArray->clear();
+  glUvArray->clear();
+  //terminateShader();
   return nAvgFrames;
 }
 

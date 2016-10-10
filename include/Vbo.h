@@ -22,11 +22,11 @@
 //  GLfloat nZ;*/
 //};
 extern std::vector<glm::vec3>::iterator vertexIterator;
-extern std::vector<glm::vec3>* vertexBuffer;
-extern std::vector<glm::vec3>* normals;
-extern std::vector<glm::vec3>* tangents;
-extern std::vector<glm::vec3>* bitangents;
-extern std::vector<glm::vec2>* uv;
-extern std::vector<glm::vec2>::iterator uvIterator;
+extern std::vector<glm::vec3>* glVertexArray;
+extern std::vector<glm::vec3>* glNormalArray;
+extern std::vector<glm::vec3>* glTangentArray;
+extern std::vector<glm::vec3>* glBitangentArray;
+extern std::vector<glm::vec2>* glUvArray;
+extern std::vector<glm::vec2>::iterator glUvIterator;
 #endif
 
