@@ -9,6 +9,7 @@
 #ifdef defined(_WIN32) || defined(WIN32)
 #define OS_Windows
 #endif
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/freeglut.h>
@@ -171,11 +172,18 @@ int main(int argc, char *argv[])
   glUvArray = new std::vector<glm::vec2>();
   appendUvData(glUvArray);
   // Configuração iniciais do GLUT
+
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(GL_ZERO, GL_ZERO);
   glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-  //shaderPlumbing();
+
+
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
+  glEnable(GL_CULL_FACE);
+
   if (glutCreateWindow("Renderizar Terreno conforme ROAM") < GL_ZERO)
   {
     printf("ERROR: No window system found!\n");
@@ -192,34 +200,45 @@ int main(int argc, char *argv[])
   glutMotionFunc(mouseMove);
   glutPassiveMotionFunc(mousePosition);
   glutDisplayFunc(sceneRenderer);
-  // Configuração do OpenGL
-  SetupRC();
-  drawMode();
-
-  // Carrega o arquivo do terreno conforme o tamanho pre-definido
-  loadTerrain(MAP_SIZE, &glHeightMap);
-
-  GLint nAvgFrames = -1;
-
-  // Começa a animação, calcula o tempo inicial em milisegundos, começa o loop do GLUT e calcula o valor médio de frames por segundo
-  if (roamInit(glHeightMap) == GL_ZERO)
+  glewExperimental = true; // Needed for core profile
+  GLint glewOk = glewInit();
+  if(glewOk==GLEW_OK)
   {
-    glAnimate = 1;
-    glStartTime = time(GL_ZERO);
-    glutMainLoop();
-    glEndTime = time(GL_ZERO);
-    nAvgFrames = (glFrames * 1000) / (glEndTime - glStartTime);
+    shaderPlumbing();
+    // Configuração do OpenGL
+    SetupRC();
+    drawMode();
+
+    // Carrega o arquivo do terreno conforme o tamanho pre-definido
+    loadTerrain(MAP_SIZE, &glHeightMap);
+
+    GLint nAvgFrames = -1;
+
+    // Começa a animação, calcula o tempo inicial em milisegundos, começa o loop do GLUT e calcula o valor médio de frames por segundo
+    if (roamInit(glHeightMap) == GL_ZERO)
+    {
+      glAnimate = 1;
+      glStartTime = time(GL_ZERO);
+      glutMainLoop();
+      glEndTime = time(GL_ZERO);
+      nAvgFrames = (glFrames * 1000) / (glEndTime - glStartTime);
+    }
+
+    freeTerrain();
+
+    glVertexArray->clear();
+    glNormalArray->clear();
+    glTangentArray->clear();
+    glBitangentArray->clear();
+    glUvArray->clear();
+    terminateShader();
+    return nAvgFrames;
   }
-
-  freeTerrain();
-
-  glVertexArray->clear();
-  glNormalArray->clear();
-  glTangentArray->clear();
-  glBitangentArray->clear();
-  glUvArray->clear();
-  //terminateShader();
-  return nAvgFrames;
+  else
+  {
+    printf("Failed to initialize GLEW!\n");
+    return -GL_ONE;
+  }
 }
 
 /**

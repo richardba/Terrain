@@ -117,9 +117,9 @@ GLvoid shaderPlumbing()
 	modelMatrixId = glGetUniformLocation(shaderHandle.id(), "MV3x3");
 
 	// Load the texture
-	diffuseTexture [0] = loadDDS("diffuse.DDS");
+	diffuseTexture [0] = loadDDS("diffuse.dds");
 	normalTexture  [0] = loadBMP_custom("normal.bmp");
-	specularTexture[0] = loadDDS("specular.DDS");
+	specularTexture[0] = loadDDS("specular.dds");
 
   diffuseTexture [1]  = glGetUniformLocation(shaderHandle.id(), "diffuseTextureSampler");
 	normalTexture  [1]  = glGetUniformLocation(shaderHandle.id(), "normalTextureSampler");
@@ -151,14 +151,14 @@ GLvoid shaderPlumbing()
 	glBufferData(GL_ARRAY_BUFFER, glNumTrisDesired, glBitangentArray->data(), GL_DYNAMIC_DRAW);
 
 	// Get a handle for our "LightPosition" uniform
-	glUseProgram(shaderHandle.id());
+	shaderHandle.bind();
 	glLightID = glGetUniformLocation(shaderHandle.id(), "LightPosition_worldspace");
 }
 
 void shaderAttrib()
 {
 		// Use our shader
-		glUseProgram(shaderHandle.id());
+		shaderHandle.bind();
 		// Compute the MVP matrix from keyboard and mouse input
 		computeMatricesFromInputs();
 		glm::mat4 ModelMatrix = glm::mat4(1.0);
@@ -478,7 +478,7 @@ void roamDrawFrame()
     glTerrain.Reset();
     glTerrain.Tessellate();
     glTerrain.Render();
-    //shaderAttrib();
+    shaderAttrib();
 }
 
 /**
