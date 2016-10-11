@@ -108,7 +108,7 @@ GLvoid shaderPlumbing()
 	glBindVertexArray(glVertexArrayBuffer);
 
 	// Create and compile our GLSL program from the shaders
-	shaderHandle =  Shader( "NormalMapping.vertexshader", "NormalMapping.fragmentshader" );
+	shaderHandle =  Shader( "vertex.shader", "fragment.shader" );
 
 	//GLFW
 	matrixId = glGetUniformLocation(shaderHandle.id(), "MVP");
@@ -175,7 +175,7 @@ void shaderAttrib()
 		glUniformMatrix3fv(modelView3x3MatrixId, 1, GL_FALSE, &ModelView3x3Matrix[0][0]);
 
 
-		glm::vec3 lightPos = glm::vec3(0,0,4);
+		glm::vec3 lightPos = glm::vec3(0,4,0);
 		glUniform3f(glLightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our diffuse texture in Texture Unit 0
@@ -961,7 +961,13 @@ glm::vec2 iterateUv()
   return uvVec;
 }
 
-
+/*GLfloat glAnimationAngle = ZERO_F;
+GLfloat glCameraPos[]	= {ZERO_F, ZERO_F, -555.f};
+GLfloat glCameraRotation[]	= {42.f, -181.f, ZERO_F};
+GLfloat glPerspective;
+GLfloat glViewPosition[]		= {ZERO_F, 5.f, ZERO_F};
+*/
+//acho que to usando as coordenadas erradas para matrizes
 void computeMatricesFromInputs()
 {
   float mouseSpeed = 0.005f;
@@ -969,7 +975,7 @@ void computeMatricesFromInputs()
   float horizontalAngle = 3.14f;
 // Initial vertical angle : none
 float verticalAngle = 0.0f;
-  glm::vec3 position = glm::vec3( glViewPosition[0], glViewPosition[1], glViewPosition[2] );
+  glm::vec3 position = glm::vec3( glCameraPos[0], glCameraPos[1], glCameraPos[2] );
 	// glfwGetTime is called only once, the first time this function is called
 	static long lastTime = std::time(GL_ZERO);
 
@@ -985,12 +991,12 @@ float verticalAngle = 0.0f;
 	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
-	glm::vec3 direction(
+	/*glm::vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle),
 		sin(verticalAngle),
 		cos(verticalAngle) * cos(horizontalAngle)
-	);
-
+	);*/
+  glm::vec3 direction(glCameraRotation[0],glCameraRotation[1],glCameraRotation[2]);
 	// Right vector
 	glm::vec3 right = glm::vec3(
 		sin(horizontalAngle - 3.14f/2.0f),
