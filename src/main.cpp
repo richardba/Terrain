@@ -170,10 +170,9 @@ int main(int argc, char *argv[])
   glTangentArray = new std::vector<glm::vec3>();
   glBitangentArray = new std::vector<glm::vec3>();
   glUvArray = new std::vector<glm::vec2>();
-  appendUvData(glUvArray);
+  bool loaded = loadOBJ("uv.obj", glUvArray);
+
   // Configuração iniciais do GLUT
-
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(GL_ZERO, GL_ZERO);

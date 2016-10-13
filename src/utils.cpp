@@ -906,49 +906,83 @@ void SetupRC()
     glTexGenfv( GL_T, GL_OBJECT_PLANE, t_vector );
 }
 
+bool loadOBJ(const char * path, std::vector<glm::vec2>* uvArray)
+{
+  printf("Loading OBJ file %s...\n", path);
+  FILE * file = fopen(path, "r");
+  int res;
+  if( file == NULL )
+  {
+		printf("Unable to load file.");
+		getchar();
+		return false;
+	}
+  char lineHeader[128];
+  res = fscanf(file, "%s", lineHeader);
+  while(res!=EOF)
+  {
+    if ( strcmp( lineHeader, "vt" ) == 0 )
+    {
+      glm::vec2 uv;
+      fscanf(file, "%f %f\n", &uv.x, &uv.y );
+      uv.y = -uv.y;
+      uvArray->push_back(uv);
+    }
+		else
+    {
+			char stupidBuffer[1000];
+			fgets(stupidBuffer, 1000, file);
+		}
+    res = fscanf(file, "%s", lineHeader);
+  }
+  fclose(file);
+  glUvIterator=glUvArray->begin();
+  return true;
+}
+
 void appendUvData(std::vector<glm::vec2>* glUvArray)
 {
-  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
-  glUvArray->push_back(glm::vec2(2.240671,0.999957));
-  glUvArray->push_back(glm::vec2(2.124629,0.999957));
-  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
-  glUvArray->push_back(glm::vec2(2.008586,0.999957));
-  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
-  glUvArray->push_back(glm::vec2(1.892544,0.999957));
-  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
-  glUvArray->push_back(glm::vec2(1.776502,0.999957));
-  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
-  glUvArray->push_back(glm::vec2(1.660459,0.999957));
-  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
-  glUvArray->push_back(glm::vec2(1.544417,0.999957));
-  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
-  glUvArray->push_back(glm::vec2(1.428374,0.999957));
-  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
-  glUvArray->push_back(glm::vec2(1.312332,0.999957));
-  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
-  glUvArray->push_back(glm::vec2(1.196290,0.999958));
-  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
-  glUvArray->push_back(glm::vec2(1.080248,0.999958));
-  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
-  glUvArray->push_back(glm::vec2(0.964206,0.999958));
-  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
-  glUvArray->push_back(glm::vec2(0.848163,0.999958));
-  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
-  glUvArray->push_back(glm::vec2(0.732121,0.999958));
-  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
-  glUvArray->push_back(glm::vec2(0.616079,0.999958));
-  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
-  glUvArray->push_back(glm::vec2(0.500037,0.999958));
-  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
-  glUvArray->push_back(glm::vec2(0.383995,0.999958));
-  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
-  glUvArray->push_back(glm::vec2(0.267953,0.999958));
-  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
-  glUvArray->push_back(glm::vec2(0.151911,0.999958));
-  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
-  glUvArray->push_back(glm::vec2(0.035868,0.999958));
-  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
-  glUvIterator=glUvArray->begin();
+//  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
+//  glUvArray->push_back(glm::vec2(2.240671,0.999957));
+//  glUvArray->push_back(glm::vec2(2.124629,0.999957));
+//  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
+//  glUvArray->push_back(glm::vec2(2.008586,0.999957));
+//  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.892544,0.999957));
+//  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.776502,0.999957));
+//  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.660459,0.999957));
+//  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.544417,0.999957));
+//  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.428374,0.999957));
+//  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.312332,0.999957));
+//  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.196290,0.999958));
+//  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.080248,0.999958));
+//  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.964206,0.999958));
+//  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.848163,0.999958));
+//  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.732121,0.999958));
+//  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.616079,0.999958));
+//  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.500037,0.999958));
+//  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.383995,0.999958));
+//  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.267953,0.999958));
+//  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.151911,0.999958));
+//  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.035868,0.999958));
+//  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
+//  glUvIterator=glUvArray->begin();
 }
 
 glm::vec2 iterateUv()

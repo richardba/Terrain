@@ -69,6 +69,7 @@ extern void appendUvData(std::vector<glm::vec2>* glUvArray);
 extern glm::vec2 iterateUv();
 extern void computeMatricesFromInputs();
 extern void terminateShader();
+extern bool loadOBJ(const char * path, std::vector<glm::vec2>* glUvArray);
 struct Mouse
 {
   GLint x;
