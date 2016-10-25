@@ -17,7 +17,6 @@
 #include <math.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
-GLFWwindow* window;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +28,7 @@ GLFWwindow* window;
 #include "../include/utils.h"
 #include "../include/Terrain.h"
 #include "../include/Vbo.h"
+#include "../include/Shader.h"
 
 using namespace std;
 std::vector<glm::vec3>* glVertexArray;
@@ -36,6 +36,8 @@ std::vector<glm::vec3>* glNormalArray;
 std::vector<glm::vec3>* glTangentArray;
 std::vector<glm::vec3>* glBitangentArray;
 std::vector<glm::vec2>* glUvArray;
+GLFWwindow* window;
+Shader* toon;
 Mouse mouse;
 /**
 * Método para renderizar a cena
@@ -235,6 +237,13 @@ int main(int argc, char *argv[])
   glewExperimental = true; // Needed for core profile
   if(!glewInit())
   {
+    if(TOON_MODE)
+    {
+        toon = toonShading();
+        toon->bind();
+        toon->unbind();
+    }
+
     shaderPlumbing();
     // Configuração do OpenGL
     SetupRC();

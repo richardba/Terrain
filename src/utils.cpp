@@ -153,6 +153,8 @@ GLvoid shaderPlumbing()
 
 	// Get a handle for our "LightPosition" uniform
 	shaderHandle.bind();
+	if(TOON_MODE)
+    toon->bind();
 	glLightID = glGetUniformLocation(shaderHandle.id(), "LightPosition_worldspace");
 }
 
@@ -272,7 +274,12 @@ void shaderAttrib(GLFWwindow* window)
 		glDisableVertexAttribArray(3);
 		glDisableVertexAttribArray(4);
 
-		glUseProgram(0);
+		shaderHandle.unbind();
+		if(TOON_MODE)
+    {
+      toon->bind();
+      toon->unbind();
+    }
 }
 
 void terminateShader()
@@ -282,11 +289,13 @@ void terminateShader()
 	glDeleteBuffers(1, &glNormalBuffer);
 	glDeleteBuffers(1, &glTangentBuffer);
 	glDeleteBuffers(1, &glBitangentBuffer);
-	glDeleteProgram(shaderHandle.id());
 	glDeleteTextures(1, &diffuseTexture[0]);
 	glDeleteTextures(1, &normalTexture[0]);
 	glDeleteTextures(1, &specularTexture[0]);
 	glDeleteVertexArrays(1, &glVertexArrayBuffer);
+	shaderHandle.~Shader();
+	if(TOON_MODE)
+    toon->~Shader();
 }
 
 /**
@@ -392,7 +401,7 @@ void freeTerrain()
 */
 void drawMode()
 {
-    //glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
@@ -837,51 +846,6 @@ bool loadOBJ(const char * path, std::vector<glm::vec2>* uvArray)
   return true;
 }
 
-void appendUvData(std::vector<glm::vec2>* glUvArray)
-{
-//  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
-//  glUvArray->push_back(glm::vec2(2.240671,0.999957));
-//  glUvArray->push_back(glm::vec2(2.124629,0.999957));
-//  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
-//  glUvArray->push_back(glm::vec2(2.008586,0.999957));
-//  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.892544,0.999957));
-//  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.776502,0.999957));
-//  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.660459,0.999957));
-//  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.544417,0.999957));
-//  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.428374,0.999957));
-//  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.312332,0.999957));
-//  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.196290,0.999958));
-//  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
-//  glUvArray->push_back(glm::vec2(1.080248,0.999958));
-//  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.964206,0.999958));
-//  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.848163,0.999958));
-//  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.732121,0.999958));
-//  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.616079,0.999958));
-//  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.500037,0.999958));
-//  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.383995,0.999958));
-//  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.267953,0.999958));
-//  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.151911,0.999958));
-//  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
-//  glUvArray->push_back(glm::vec2(0.035868,0.999958));
-//  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
-//  glUvIterator=glUvArray->begin();
-}
-
 glm::vec2 iterateUv()
 {
   glm::vec2 uvVec;
@@ -892,12 +856,6 @@ glm::vec2 iterateUv()
   return uvVec;
 }
 
-/*GLfloat glAnimationAngle = ZERO_F;
-GLfloat glCameraPos[]	= {ZERO_F, ZERO_F, -555.f};
-GLfloat glCameraRotation[]	= {42.f, -181.f, ZERO_F};
-GLfloat glPerspective;
-GLfloat glViewPosition[]		= {ZERO_F, 5.f, ZERO_F};
-*/
 //acho que to usando as coordenadas erradas para matrizes
 void computeMatricesFromInputs(GLFWwindow* window)
 {
@@ -1038,3 +996,7 @@ void computeMatricesFromInputs(GLFWwindow* window)
   MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 }
 
+Shader* toonShading()
+{
+  return (new Shader( "vertex.toon", "fragment.toon" ));
+}

@@ -6,10 +6,12 @@
 #define WINDOW_WIDTH  (640)
 #define DEBUG_MODE (0)
 #define GLFW_MODE (0)
+#define TOON_MODE (0)
 #include <vector>
 #include <glm/glm.hpp>
 
 typedef struct GLFWwindow GLFWwindow;
+class Shader;
 // Variáveis do pipeline gráfico
 extern GLuint glLightID;
 extern GLuint glVertexBuffer;
@@ -81,3 +83,5 @@ struct Mouse
 
 extern Mouse mouse;
 extern glm::vec3 maximal;
+extern Shader* toonShading();
+extern Shader* toon;

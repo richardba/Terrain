@@ -32,7 +32,7 @@
 #define POOL_SIZE (25000)
 
 #define MESH_SIZE (MAP_SIZE/NUM_MESHES_PER_SIDE)
-#define TEXTURE_SIZE (128)
+#define TEXTURE_SIZE (16)
 
 // Drawing Modes
 #define DRAW_USE_TEXTURE   (0)
