@@ -4,8 +4,12 @@
 */
 #define WINDOW_HEIGHT (480)
 #define WINDOW_WIDTH  (640)
+#define DEBUG_MODE (0)
+#define GLFW_MODE (0)
 #include <vector>
 #include <glm/glm.hpp>
+
+typedef struct GLFWwindow GLFWwindow;
 // Variáveis do pipeline gráfico
 extern GLuint glLightID;
 extern GLuint glVertexBuffer;
@@ -33,7 +37,6 @@ extern GLint glStartX;
 extern GLint glStartY;
 extern long glStartTime, glEndTime;
 extern unsigned char *glHeightMap;
-
 // Métodos
 extern GLint roamInit(unsigned char *map);
 extern void animateToggle(void);
@@ -59,16 +62,17 @@ extern void mouseMove(GLint mouseX, GLint mouseY);
 extern void mouseWheel(GLint, GLint, GLint, GLint);
 extern void reduceToUnit(float vector[3]);
 extern void renderMode(void);
-extern void renderScene(void);
-extern void roamDrawFrame();
+extern void renderScene(GLFWwindow* window);
+extern void roamDrawFrame(GLFWwindow* window);
 extern void SetupRC();
 extern GLvoid shaderPlumbing();
 extern void toggleLessDetail(void);
 extern void toggleMoreDetail(void);
 extern void appendUvData(std::vector<glm::vec2>* glUvArray);
 extern glm::vec2 iterateUv();
-extern void computeMatricesFromInputs();
+extern void computeMatricesFromInputs(GLFWwindow* window);
 extern void terminateShader();
+extern bool loadOBJ(const char * path, std::vector<glm::vec2>* glUvArray);
 struct Mouse
 {
   GLint x;
@@ -76,3 +80,4 @@ struct Mouse
 };
 
 extern Mouse mouse;
+extern glm::vec3 maximal;

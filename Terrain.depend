@@ -383,13 +383,13 @@
 1473125893 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\landscape.h
 	"Patch.h"
 
-1474853648 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
+1475089049 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\patch.h
 
-1476060180 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
+1477345987 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\utils.h
 	<vector>
 	<glm/glm.hpp>
 
-1474218963 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
+1475089049 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\terrain.h
 	"../include/Patch.h"
 
 1473182095 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\mesh.h
@@ -442,18 +442,19 @@
 	<climits>
 	"include/Terrain.h"
 
-1476031560 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\classes.cpp
+1477322734 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\classes.cpp
 	<windows.h>
 	<math.h>
 	<gl/gl.h>
 	<iostream>
+	<stdio.h>
 	<cstdlib>
 	<climits>
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 	"../include/utils.h"
 
-1476106208 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
+1477345414 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\main.cpp
 	<GL/glew.h>
 	<GL/gl.h>
 	<GL/glut.h>
@@ -461,6 +462,7 @@
 	<glm/glm.hpp>
 	<math.h>
 	<glm/glm.hpp>
+	<GLFW/glfw3.h>
 	<stdio.h>
 	<stdlib.h>
 	<math.h>
@@ -471,7 +473,7 @@
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 
-1475857181 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\shader.cpp
+1475169768 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\shader.cpp
 	"../include/Shader.h"
 	<string>
 	<fstream>
@@ -481,7 +483,7 @@
 	<GL/glut.h>
 	<glm/glm.hpp>
 
-1475857181 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\shader.h
+1475169976 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\shader.h
 	<GL/glew.h>
 
 1439207242 c:\mingw\include\gl\glew.h
@@ -941,7 +943,7 @@
 
 1471474414 c:\mingw\include\glm\simd\integer.h
 
-1476106330 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\utils.cpp
+1477345969 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\utils.cpp
 	<GL/glew.h>
 	<GL/gl.h>
 	<GL/glu.h>
@@ -954,13 +956,14 @@
 	<vector>
 	<ctime>
 	<glm/gtc/matrix_transform.hpp>
+	<GLFW/glfw3.h>
 	"../include/utils.h"
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 	"../include/Shader.h"
 	"../include/texture.h"
 
-1476031560 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
+1476117825 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\vbo.h
 	<vector>
 	<glm/glm.hpp>
 
@@ -1023,11 +1026,12 @@
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 
-1475945374 source:c:\users\richardba\workspace\roaming\src\classes.cpp
+1476452419 source:c:\users\richardba\workspace\roaming\src\classes.cpp
 	<windows.h>
 	<math.h>
 	<gl/gl.h>
 	<iostream>
+	<stdio.h>
 	<cstdlib>
 	<climits>
 	"../include/Terrain.h"
@@ -1039,11 +1043,12 @@
 
 1475089049 c:\users\richardba\workspace\roaming\include\patch.h
 
-1475945374 c:\users\richardba\workspace\roaming\include\vbo.h
+1476117825 c:\users\richardba\workspace\roaming\include\vbo.h
 	<vector>
 	<glm/glm.hpp>
 
-1475945374 source:c:\users\richardba\workspace\roaming\src\main.cpp
+1476460734 source:c:\users\richardba\workspace\roaming\src\main.cpp
+	<GL/glew.h>
 	<GL/gl.h>
 	<GL/glut.h>
 	<GL/freeglut.h>
@@ -1060,7 +1065,7 @@
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 
-1475957620 c:\users\richardba\workspace\roaming\include\utils.h
+1476397554 c:\users\richardba\workspace\roaming\include\utils.h
 	<vector>
 	<glm/glm.hpp>
 
@@ -1077,7 +1082,7 @@
 1475169976 c:\users\richardba\workspace\roaming\include\shader.h
 	<GL/glew.h>
 
-1475786744 source:c:\users\richardba\workspace\roaming\src\utils.cpp
+1476460431 source:c:\users\richardba\workspace\roaming\src\utils.cpp
 	<GL/glew.h>
 	<GL/gl.h>
 	<GL/glu.h>
@@ -1086,12 +1091,17 @@
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<iostream>
+	<vector>
+	<ctime>
+	<glm/gtc/matrix_transform.hpp>
 	"../include/utils.h"
 	"../include/Terrain.h"
 	"../include/Vbo.h"
 	"../include/Shader.h"
+	"../include/texture.h"
 
-1476039725 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\texture.cpp
+1476117825 source:c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\src\texture.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -1122,7 +1132,7 @@
 1469391548 c:\mingw\include\gl\glext.h
 	<windows.h>
 
-1476039766 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\texture.h
+1476117825 c:\users\richardba\documents\faculdade\ufba\mate21\projeto\terrain\include\texture.h
 
 1472773335 c:\mingw\include\glm\gtc\matrix_transform.hpp
 	"../mat4x4.hpp"
@@ -1143,4 +1153,13 @@
 	"../geometric.hpp"
 	"../trigonometric.hpp"
 	"../matrix.hpp"
+
+1476117825 source:c:\users\richardba\workspace\roaming\src\texture.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+
+1476117825 c:\users\richardba\workspace\roaming\include\texture.h
 

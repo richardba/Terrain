@@ -10,6 +10,7 @@
 #include <vector>
 #include <ctime>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
 
 #include "../include/utils.h"
 #include "../include/Terrain.h"
@@ -18,10 +19,7 @@
 #include "../include/texture.h"
 
 /* Constantes responsáveis pelo modo da câmera */
-#define FOLLOW          (0)
 #define OBSERVE         (1)
-#define DRIVE           (2)
-#define FLY_MODE        (3)
 
 #define FAR_CLIP        (2500.0f)
 #define FOV_ANGLE       (90.0f)
@@ -61,8 +59,8 @@ GLfloat glCameraRotation[]	= {42.f, -181.f, ZERO_F};
 GLfloat glPerspective;
 GLfloat glViewPosition[]		= {ZERO_F, 5.f, ZERO_F};
 GLint glAnimate     = GL_ZERO;
-GLint glCamera      = DRIVE;
-GLint glDrawFrustum = 1;
+GLint glCamera      = OBSERVE;
+GLint glDrawFrustum = GL_ONE;
 GLint glDrawMode     = DRAW_USE_TEXTURE;
 GLint glFrames;
 float glFrameDiff = 50;
@@ -94,7 +92,10 @@ GLuint modelView3x3MatrixId;
 
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
-
+glm::mat4 ModelMatrix = glm::mat4(1.0);
+glm::mat4 ModelViewMatrix;
+glm::mat3 ModelView3x3Matrix;
+glm::mat4 MVP;
 float glFoVX = 90.0f;
 long glEndTime;
 long glStartTime;
@@ -108,7 +109,7 @@ GLvoid shaderPlumbing()
 	glBindVertexArray(glVertexArrayBuffer);
 
 	// Create and compile our GLSL program from the shaders
-	shaderHandle =  Shader( "NormalMapping.vertexshader", "NormalMapping.fragmentshader" );
+	shaderHandle =  Shader( "vertex.shader", "fragment.shader" );
 
 	//GLFW
 	matrixId = glGetUniformLocation(shaderHandle.id(), "MVP");
@@ -118,7 +119,7 @@ GLvoid shaderPlumbing()
 
 	// Load the texture
 	diffuseTexture [0] = loadDDS("diffuse.dds");
-	normalTexture  [0] = loadBMP_custom("normal.bmp");
+	normalTexture  [0] = loadBMP_custom("bump.bmp");
 	specularTexture[0] = loadDDS("specular.dds");
 
   diffuseTexture [1]  = glGetUniformLocation(shaderHandle.id(), "diffuseTextureSampler");
@@ -155,16 +156,16 @@ GLvoid shaderPlumbing()
 	glLightID = glGetUniformLocation(shaderHandle.id(), "LightPosition_worldspace");
 }
 
-void shaderAttrib()
+void shaderAttrib(GLFWwindow* window)
 {
 		// Use our shader
 		shaderHandle.bind();
 		// Compute the MVP matrix from keyboard and mouse input
-		computeMatricesFromInputs();
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
-		glm::mat4 ModelViewMatrix = ViewMatrix * ModelMatrix;
-		glm::mat3 ModelView3x3Matrix = glm::mat3(ModelViewMatrix);
-		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		if(!GLFW_MODE)
+    {
+      computeMatricesFromInputs(NULL);
+    }
 
 		// Send our transformation to the currently bound shader,
 		// in the "MVP" uniform
@@ -175,7 +176,8 @@ void shaderAttrib()
 		glUniformMatrix3fv(modelView3x3MatrixId, 1, GL_FALSE, &ModelView3x3Matrix[0][0]);
 
 
-		glm::vec3 lightPos = glm::vec3(0,0,4);
+  	glm::vec3 lightPos = glm::vec3(0,300,0);
+
 		glUniform3f(glLightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our diffuse texture in Texture Unit 0
@@ -390,41 +392,11 @@ void freeTerrain()
 */
 void drawMode()
 {
-    switch (glDrawMode)
-    {
-    case DRAW_USE_TEXTURE:
-        glDisable(GL_LIGHTING);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_TEXTURE_GEN_S);
-        glEnable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    case DRAW_USE_LIGHTING:
-        glEnable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    case DRAW_USE_FILL_ONLY:
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    default:
-    case DRAW_USE_WIREFRAME:
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_LINE);
-        break;
-    }
+    //glDisable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glPolygonMode(GL_FRONT, GL_FILL);
 }
 
 /**
@@ -473,12 +445,14 @@ GLint roamInit(unsigned char *map)
 /**
 * Método responsável em fazer chamada de funções responsáveis para renderização de um frame do cenário
 */
-void roamDrawFrame()
+void roamDrawFrame(GLFWwindow* window)
 {
     glTerrain.Reset();
     glTerrain.Tessellate();
     glTerrain.Render();
-    shaderAttrib();
+    shaderAttrib(window);
+    if(DEBUG_MODE)
+      printf("%f - %f\n",maximal.x,maximal.y);
 }
 
 /**
@@ -486,14 +460,15 @@ void roamDrawFrame()
 */
 void drawFrustum()
 {
-    glDisable(GL_LIGHTING);
+
+    //glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_TEXTURE_GEN_S);
     glDisable(GL_TEXTURE_GEN_T);
 
     glPointSize(2.f);
     glLineWidth(3.f);
-
+    /*
     glBegin(GL_LINES);
 
     glColor3f(GL_ONE, GL_ZERO, GL_ZERO);
@@ -553,7 +528,7 @@ void drawFrustum()
                 (float)ptRightY);
 
     glEnd();
-
+    */
     glLineWidth(1.f);
     glColor3f(GL_ONE, GL_ONE, GL_ONE);
 
@@ -582,12 +557,7 @@ void mouseWheel(GLint button, GLint dir, GLint x, GLint y)
 */
 void cameraMode(void)
 {
-    glCamera++;
-    if ( glCamera > FLY_MODE )
-        glCamera = FOLLOW;
 
-    if (glCamera == FOLLOW)
-        glAnimate = GL_ONE;
 }
 
 void renderMode(void)
@@ -604,37 +574,7 @@ void renderMode(void)
 */
 void KeyForward(void)
 {
-    switch ( glCamera )
-    {
-    default:
-    case FOLLOW:
-        break;
-
-    case OBSERVE:
-        glCameraPos[2] += 5.0f;
-        break;
-
-    case DRIVE:
-        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-        glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-
-        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
-        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
-
-        if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
-        if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
-
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
-        break;
-
-    case FLY_MODE:
-        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                                   * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                             * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[1] -= 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        break;
-    }
+    glCameraPos[2] += 5.0f;
 }
 
 /**
@@ -642,8 +582,7 @@ void KeyForward(void)
 */
 void KeyLeft(void)
 {
-    if ( glCamera == OBSERVE )
-        glCameraRotation[1] -= 5.0f;
+    glCameraRotation[1] -= 5.0f;
 }
 
 /**
@@ -651,37 +590,7 @@ void KeyLeft(void)
 */
 void KeyBackward(void)
 {
-    switch ( glCamera )
-    {
-    default:
-    case FOLLOW:
-        break;
-
-    case OBSERVE:
-        glCameraPos[2] -= 5.0f;
-        break;
-
-    case DRIVE:
-        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-        glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-
-        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
-        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
-
-        if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
-        if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
-
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
-        break;
-
-    case FLY_MODE:
-        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                                   * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                             * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[1] += 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        break;
-    }
+    glCameraPos[2] -= 5.0f;
 }
 
 /**
@@ -689,8 +598,7 @@ void KeyBackward(void)
 */
 void KeyRight(void)
 {
-    if ( glCamera == OBSERVE )
-        glCameraRotation[1] += 5.0f;
+    glCameraRotation[1] += 5.0f;
 }
 
 void animateToggle(void)
@@ -772,68 +680,56 @@ void KeyFOVUp(void)
     changeSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
-void renderScene(void)
+void renderScene(GLFWwindow* window)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //CHANGE TO USE SHADER
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-
-    switch (glCamera)
+    if(!GLFW_MODE)
     {
-    default:
-    case FOLLOW:
-        glRotatef(-glAnimationAngle,ZERO_F, 1.f,ZERO_F);
-        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
+        //CHANGE TO USE SHADER
+      glMatrixMode(GL_MODELVIEW);
+      glPushMatrix();
 
-        glPerspective = -glAnimationAngle;
-        break;
+      glTranslatef(0.f, glCameraPos[1], glCameraPos[2]);
 
-    case OBSERVE:
+      glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
+      glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
 
-        glTranslatef(0.f, glCameraPos[1], glCameraPos[2]);
+      glTranslatef(-((GLfloat) MAP_SIZE * .5f), .0f, -((GLfloat) MAP_SIZE * .5f));
 
-        glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
-        glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
+      glPerspective = -glAnimationAngle;
 
-        glTranslatef(-((GLfloat) MAP_SIZE * .5f), .0f, -((GLfloat) MAP_SIZE * .5f));
+      roamDrawFrame(window);
 
-        glPerspective = -glAnimationAngle;
-        break;
-
-    case DRIVE:
-    case FLY_MODE:
-        glAnimate = GL_ZERO;
-
-        glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
-        glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
-
-        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
-
-        glPerspective = glCameraRotation[ROTATE_YAW];
-        break;
-    }
-    roamDrawFrame();
-
-    if ( glDrawFrustum )
+      if ( glDrawFrustum )
+      {
         drawFrustum();
+      }
 
-    glPopMatrix();
+      glPopMatrix();
 
-    glFrames++;
+      glFrames++;
+    }
+    else
+    {
+      glMatrixMode(GL_PROJECTION);
+      glLoadMatrixf((const GLfloat*)&ProjectionMatrix[0]);
+      glMatrixMode(GL_MODELVIEW);
+      glm::mat4 MV = ViewMatrix * ModelMatrix;
+      glLoadMatrixf((const GLfloat*)&MV[0]);
 
-    glPrint(10, 10, "Arrows keys to move around");
-    glPrint(10, 30, "A - Animate screen");
-    glPrint(10, 50, "C - Camera mode");
-    glPrint(10, 70, "W - Render mode");
-    glPrint(10, 90, "R - Toggle frustrum");
+      roamDrawFrame(window);
+
+      if ( glDrawFrustum )
+      {
+        drawFrustum();
+      }
+    }
 }
 
 void mouseMove(GLint mouseX, GLint mouseY)
 {
-    if ( glRotate &&
-            (glCamera != FOLLOW))
+    if ( glRotate )
     {
         GLint dx, dy;
 
@@ -864,10 +760,10 @@ void idleFn(void)
     {
         glAnimationAngle = glAnimationAngle + 0.4f;
 
-        glViewPosition[0] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
-        glViewPosition[2] = ((GLfloat) MAP_SIZE / 4.f) + ((cosf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
+        //glViewPosition[0] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
+        //glViewPosition[2] = ((GLfloat) MAP_SIZE / 4.f) + ((cosf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
 
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
+        //glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
     }
 }
 
@@ -876,6 +772,7 @@ void SetupRC()
     glEnable(GL_DEPTH_TEST);
     glFrontFace(GL_CCW);
     glEnable(GL_CULL_FACE);
+    glDepthFunc(GL_LESS);
 
     glClearColor( .40f, .53f, .60f, 1.0f );
 
@@ -906,49 +803,83 @@ void SetupRC()
     glTexGenfv( GL_T, GL_OBJECT_PLANE, t_vector );
 }
 
+bool loadOBJ(const char * path, std::vector<glm::vec2>* uvArray)
+{
+  printf("Loading OBJ file %s...\n", path);
+  FILE * file = fopen(path, "r");
+  int res;
+  if( file == NULL )
+  {
+		printf("Unable to load file.");
+		getchar();
+		return false;
+	}
+  char lineHeader[128];
+  res = fscanf(file, "%s", lineHeader);
+  while(res!=EOF)
+  {
+    if ( strcmp( lineHeader, "vt" ) == 0 )
+    {
+      glm::vec2 uv;
+      fscanf(file, "%f %f\n", &uv.x, &uv.y );
+      uv.y = -uv.y;
+      uvArray->push_back(uv);
+    }
+		else
+    {
+			char stupidBuffer[1000];
+			fgets(stupidBuffer, 1000, file);
+		}
+    res = fscanf(file, "%s", lineHeader);
+  }
+  fclose(file);
+  glUvIterator=glUvArray->begin();
+  return true;
+}
+
 void appendUvData(std::vector<glm::vec2>* glUvArray)
 {
-  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
-  glUvArray->push_back(glm::vec2(2.240671,0.999957));
-  glUvArray->push_back(glm::vec2(2.124629,0.999957));
-  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
-  glUvArray->push_back(glm::vec2(2.008586,0.999957));
-  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
-  glUvArray->push_back(glm::vec2(1.892544,0.999957));
-  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
-  glUvArray->push_back(glm::vec2(1.776502,0.999957));
-  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
-  glUvArray->push_back(glm::vec2(1.660459,0.999957));
-  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
-  glUvArray->push_back(glm::vec2(1.544417,0.999957));
-  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
-  glUvArray->push_back(glm::vec2(1.428374,0.999957));
-  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
-  glUvArray->push_back(glm::vec2(1.312332,0.999957));
-  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
-  glUvArray->push_back(glm::vec2(1.196290,0.999958));
-  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
-  glUvArray->push_back(glm::vec2(1.080248,0.999958));
-  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
-  glUvArray->push_back(glm::vec2(0.964206,0.999958));
-  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
-  glUvArray->push_back(glm::vec2(0.848163,0.999958));
-  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
-  glUvArray->push_back(glm::vec2(0.732121,0.999958));
-  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
-  glUvArray->push_back(glm::vec2(0.616079,0.999958));
-  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
-  glUvArray->push_back(glm::vec2(0.500037,0.999958));
-  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
-  glUvArray->push_back(glm::vec2(0.383995,0.999958));
-  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
-  glUvArray->push_back(glm::vec2(0.267953,0.999958));
-  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
-  glUvArray->push_back(glm::vec2(0.151911,0.999958));
-  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
-  glUvArray->push_back(glm::vec2(0.035868,0.999958));
-  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
-  glUvIterator=glUvArray->begin();
+//  glUvArray->push_back(glm::vec2(2.240672,-0.000043));
+//  glUvArray->push_back(glm::vec2(2.240671,0.999957));
+//  glUvArray->push_back(glm::vec2(2.124629,0.999957));
+//  glUvArray->push_back(glm::vec2(2.124630,-0.000043));
+//  glUvArray->push_back(glm::vec2(2.008586,0.999957));
+//  glUvArray->push_back(glm::vec2(2.008587,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.892544,0.999957));
+//  glUvArray->push_back(glm::vec2(1.892545,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.776502,0.999957));
+//  glUvArray->push_back(glm::vec2(1.776503,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.660459,0.999957));
+//  glUvArray->push_back(glm::vec2(1.660460,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.544417,0.999957));
+//  glUvArray->push_back(glm::vec2(1.544418,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.428374,0.999957));
+//  glUvArray->push_back(glm::vec2(1.428375,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.312332,0.999957));
+//  glUvArray->push_back(glm::vec2(1.312333,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.196290,0.999958));
+//  glUvArray->push_back(glm::vec2(1.196290,-0.000043));
+//  glUvArray->push_back(glm::vec2(1.080248,0.999958));
+//  glUvArray->push_back(glm::vec2(1.080248,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.964206,0.999958));
+//  glUvArray->push_back(glm::vec2(0.964206,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.848163,0.999958));
+//  glUvArray->push_back(glm::vec2(0.848163,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.732121,0.999958));
+//  glUvArray->push_back(glm::vec2(0.732121,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.616079,0.999958));
+//  glUvArray->push_back(glm::vec2(0.616079,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.500037,0.999958));
+//  glUvArray->push_back(glm::vec2(0.500036,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.383995,0.999958));
+//  glUvArray->push_back(glm::vec2(0.383994,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.267953,0.999958));
+//  glUvArray->push_back(glm::vec2(0.267952,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.151911,0.999958));
+//  glUvArray->push_back(glm::vec2(0.151909,-0.000043));
+//  glUvArray->push_back(glm::vec2(0.035868,0.999958));
+//  glUvArray->push_back(glm::vec2(0.035867,-0.000043));
+//  glUvIterator=glUvArray->begin();
 }
 
 glm::vec2 iterateUv()
@@ -961,55 +892,149 @@ glm::vec2 iterateUv()
   return uvVec;
 }
 
-
-void computeMatricesFromInputs()
+/*GLfloat glAnimationAngle = ZERO_F;
+GLfloat glCameraPos[]	= {ZERO_F, ZERO_F, -555.f};
+GLfloat glCameraRotation[]	= {42.f, -181.f, ZERO_F};
+GLfloat glPerspective;
+GLfloat glViewPosition[]		= {ZERO_F, 5.f, ZERO_F};
+*/
+//acho que to usando as coordenadas erradas para matrizes
+void computeMatricesFromInputs(GLFWwindow* window)
 {
   float mouseSpeed = 0.005f;
   float initialFoV = 45.0f;
   float horizontalAngle = 3.14f;
-// Initial vertical angle : none
-float verticalAngle = 0.0f;
-  glm::vec3 position = glm::vec3( glViewPosition[0], glViewPosition[1], glViewPosition[2] );
-	// glfwGetTime is called only once, the first time this function is called
-	static long lastTime = std::time(GL_ZERO);
+  float verticalAngle = 0.0f;
+  float FoV;
+  float speed = 3.0f;
+  static long lastTime, currentTime;
+  float deltaTime;
+  double xpos, ypos;
+  glm::vec3 direction;
+  glm::vec3 right;
+  glm::vec3 position;
+  glm::vec3 up;
+  if(!GLFW_MODE)
+  {
+    position = glm::vec3( glCameraPos[0], glCameraPos[1], glCameraPos[2] );
+    // glfwGetTime is called only once, the first time this function is called
+    lastTime = std::time(GL_ZERO);
 
-	// Compute time difference between current and last frame
-	long currentTime = std::time(GL_ZERO);
-	float deltaTime = float(currentTime - lastTime);
+    // Compute time difference between current and last frame
+    currentTime = std::time(GL_ZERO);
+    deltaTime = float(currentTime - lastTime);
 
-	// Get mouse position
-	double xpos= (double)mouse.x, ypos=(double)mouse.y;
+    // Get mouse position
+    xpos = (double)mouse.x;
+    ypos =(double)mouse.y;
 
-	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(1024/2 - xpos );
-	verticalAngle   += mouseSpeed * float( 768/2 - ypos );
+    // Compute new orientation
+    horizontalAngle += mouseSpeed * float(1024/2 - xpos );
+    verticalAngle   += mouseSpeed * float( 768/2 - ypos );
 
-	// Direction : Spherical coordinates to Cartesian coordinates conversion
-	glm::vec3 direction(
-		cos(verticalAngle) * sin(horizontalAngle),
-		sin(verticalAngle),
-		cos(verticalAngle) * cos(horizontalAngle)
-	);
+    // Direction : Spherical coordinates to Cartesian coordinates conversion
+    /*glm::vec3 direction(
+    cos(verticalAngle) * sin(horizontalAngle),
+    sin(verticalAngle),
+    cos(verticalAngle) * cos(horizontalAngle)
+    );*/
+    direction = glm::vec3(glCameraRotation[0],glCameraRotation[1],glCameraRotation[2]);
+    // Right vector
+    right = glm::vec3(
+      sin(horizontalAngle - 3.14f/2.0f),
+      0,
+      cos(horizontalAngle - 3.14f/2.0f)
+    );
+    up = glm::cross( right, direction );
+    FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 
-	// Right vector
-	glm::vec3 right = glm::vec3(
-		sin(horizontalAngle - 3.14f/2.0f),
-		0,
-		cos(horizontalAngle - 3.14f/2.0f)
-	);
-  glm::vec3 up = glm::cross( right, direction );
-	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
+    // Camera matrix
+    ViewMatrix       = glm::lookAt(
+      position,           // Camera is here
+      position+direction, // and looks here : at the same position, plus "direction"
+      up                  // Head is up (set to 0,-1,0 to look upside-down)
+    );
 
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
-	// Camera matrix
-	ViewMatrix       = glm::lookAt(
-								position,           // Camera is here
-								position+direction, // and looks here : at the same position, plus "direction"
-								up                  // Head is up (set to 0,-1,0 to look upside-down)
-						   );
+    // For the next frame, the "last time" will be "now"
+    lastTime = currentTime;
+  }
+  else
+  {
+    position = glm::vec3( 0, 0, 5 );
+    // glfwGetTime is called only once, the first time this function is called
+    lastTime = glfwGetTime();
 
-	// For the next frame, the "last time" will be "now"
-	lastTime = currentTime;
+    // Compute time difference between current and last frame
+    currentTime = glfwGetTime();
+    deltaTime = float(currentTime - lastTime);
+
+    // Get mouse position
+    glfwGetCursorPos(window, &xpos, &ypos);
+
+    // Reset mouse position for next frame
+    glfwSetCursorPos(window, 1024/2, 768/2);
+
+    // Compute new orientation
+    horizontalAngle += mouseSpeed * float(1024/2 - xpos );
+    verticalAngle   += mouseSpeed * float( 768/2 - ypos );
+
+    // Direction : Spherical coordinates to Cartesian coordinates conversion
+    direction = glm::vec3(
+      cos(verticalAngle) * sin(horizontalAngle),
+      sin(verticalAngle),
+      cos(verticalAngle) * cos(horizontalAngle)
+    );
+
+    // Right vector
+    right = glm::vec3(
+      sin(horizontalAngle - 3.14f/2.0f),
+      0,
+      cos(horizontalAngle - 3.14f/2.0f)
+    );
+
+    // Up vector
+    up = glm::cross( right, direction );
+
+    // Move forward
+    if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS)
+    {
+      position += direction * deltaTime * speed;
+    }
+    // Move backward
+    if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS)
+    {
+      position -= direction * deltaTime * speed;
+    }
+    // Strafe right
+    if (glfwGetKey( window, GLFW_KEY_RIGHT ) == GLFW_PRESS)
+    {
+      position += right * deltaTime * speed;
+    }
+    // Strafe left
+    if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS)
+    {
+      position -= right * deltaTime * speed;
+    }
+
+    FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+
+    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
+    // Camera matrix
+    ViewMatrix       = glm::lookAt(
+    position,           // Camera is here
+    position+direction, // and looks here : at the same position, plus "direction"
+    up                  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+    // For the next frame, the "last time" will be "now"
+    lastTime = currentTime;
+  }
+
+  ModelViewMatrix = ViewMatrix * ModelMatrix;
+  ModelView3x3Matrix = glm::mat3(ModelViewMatrix);
+  MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 }
 

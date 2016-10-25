@@ -18,11 +18,13 @@
 #include <math.h>
 #include <gl/gl.h>
 #include <iostream>
+#include <stdio.h>
 #include <cstdlib>
 #include <climits>
 #include "../include/Terrain.h"
 #include "../include/Vbo.h"
 #include "../include/utils.h"
+glm::vec3 maximal = glm::vec3(0);
 
 inline GLint orientation(GLint pX, GLint pY, GLint qX, GLint qY, GLint rX, GLint rY)
 {
@@ -239,6 +241,23 @@ void Patch::recursiveRender(TriTreeNode *tri, GLint leftX, GLint leftY, GLint ri
 
       // Same thing for binormals
       glBitangentArray->push_back(bitangent);
+      if(DEBUG_MODE)
+      {
+        if(vertex1.y>maximal.y)
+          maximal.y = vertex1.y;
+        else if(vertex2.y>maximal.y)
+          maximal.y = vertex2.y;
+        else if(vertex2.y>maximal.y)
+          maximal.y = vertex2.y;
+
+        if(vertex1.x>maximal.x)
+        maximal.x = vertex1.x;
+        else if(vertex2.x>maximal.x)
+          maximal.x = vertex2.x;
+        else if(vertex2.x>maximal.x)
+          maximal.x = vertex2.x;
+      }
+
   }
 }
 
@@ -331,10 +350,10 @@ void Patch::SetVisibility(GLint eyeX, GLint eyeY, GLint leftX, GLint leftY, GLin
     GLint patchCenterX = patchWorldX + MESH_SIZE / 2;
     GLint patchCenterY = patchWorldY + MESH_SIZE / 2;
 
-    isPatchVisible =
-        (orientation(eyeX, eyeY, rightX, rightY, patchCenterX, patchCenterY) <
-         GL_ZERO) &&
-        (orientation(leftX, leftY, eyeX, eyeY, patchCenterX, patchCenterY) < GL_ZERO);
+    isPatchVisible = 1;
+//        (orientation(eyeX, eyeY, rightX, rightY, patchCenterX, patchCenterY) <
+//         GL_ZERO) &&
+//        (orientation(leftX, leftY, eyeX, eyeY, patchCenterX, patchCenterY) < GL_ZERO);
 }
 
 void Patch::Tessellate()

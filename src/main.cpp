@@ -16,6 +16,8 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
+GLFWwindow* window;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,9 +42,16 @@ Mouse mouse;
 */
 void sceneRenderer(void)
 {
-  renderScene();
-
-  glutSwapBuffers(); // Copia o mapa para a janela
+  if(!GLFW_MODE)
+  {
+    renderScene(NULL);
+    glutSwapBuffers(); // Copia o mapa para a janela
+  }
+  else
+  {
+    renderScene(window);
+    glfwSwapBuffers(window);
+  }
 }
 
 /**
@@ -53,16 +62,16 @@ void keyMap(unsigned char key, GLint x, GLint y)
   switch (key)
   {
     case 'a':
-      animateToggle();
+      //animateToggle();
       break;
     case 'c':
-      cameraMode();
+      //cameraMode();
       break;
     case 'w':
-      renderMode();
+      //renderMode();
       break;
     case 'r':
-      frustrumToggle();
+      //frustrumToggle();
       break;
 
     case '+':
@@ -170,39 +179,61 @@ int main(int argc, char *argv[])
   glTangentArray = new std::vector<glm::vec3>();
   glBitangentArray = new std::vector<glm::vec3>();
   glUvArray = new std::vector<glm::vec2>();
-  appendUvData(glUvArray);
-  // Configuração iniciais do GLUT
+  bool loaded = loadOBJ("uv.obj", glUvArray);
 
-
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowPosition(GL_ZERO, GL_ZERO);
-  glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-
-
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LESS);
-  glEnable(GL_CULL_FACE);
-
-  if (glutCreateWindow("Renderizar Terreno conforme ROAM") < GL_ZERO)
+  if(!GLFW_MODE)
   {
-    printf("ERROR: No window system found!\n");
-    exit(GL_ZERO);
+     // Configuração iniciais do GLUT
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowPosition(GL_ZERO, GL_ZERO);
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    if (glutCreateWindow("Renderizar Terreno conforme ROAM") < GL_ZERO)
+    {
+      printf("ERROR: No window system found!\n");
+      exit(GL_ZERO);
+    }
+  // Conjunto de funções para redimesionamento, para quando estiver ocioso e mapeamento de teclado e mouse
+    glutReshapeFunc(changeSize);
+    glutIdleFunc(idleFunction);
+    glutKeyboardFunc(keyMap);
+    glutMouseWheelFunc(mouseWheel);
+    glutSpecialFunc(GLUTKeySpecialDown);
+    glutMouseFunc(GLUTMouseClick);
+    glutMotionFunc(mouseMove);
+    glutPassiveMotionFunc(mousePosition);
+    glutDisplayFunc(sceneRenderer);
   }
 
-  // Conjunto de funções para redimesionamento, para quando estiver ocioso e mapeamento de teclado e mouse
-  glutReshapeFunc(changeSize);
-  glutIdleFunc(idleFunction);
-  glutKeyboardFunc(keyMap);
-  glutMouseWheelFunc(mouseWheel);
-  glutSpecialFunc(GLUTKeySpecialDown);
-  glutMouseFunc(GLUTMouseClick);
-  glutMotionFunc(mouseMove);
-  glutPassiveMotionFunc(mousePosition);
-  glutDisplayFunc(sceneRenderer);
+  if(GLFW_MODE){
+    if( !glfwInit() )
+    {
+      fprintf( stderr, "Failed to initialize GLFW\n" );
+      getchar();
+      return -1;
+    }
+
+    glfwWindowHint(GLFW_SAMPLES, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); // So that glBegin/glVertex/glEnd work
+
+    // Open a window and create its OpenGL context
+    window = glfwCreateWindow( 1024, 768, "Tutorial 13 - Normal Mapping", NULL, NULL);
+    if( window == NULL )
+    {
+      fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
+      getchar();
+      glfwTerminate();
+      return -1;
+    }
+    glfwMakeContextCurrent(window);
+  }
+
   glewExperimental = true; // Needed for core profile
-  GLint glewOk = glewInit();
-  if(glewOk==GLEW_OK)
+  if(!glewInit())
   {
     shaderPlumbing();
     // Configuração do OpenGL
@@ -211,17 +242,49 @@ int main(int argc, char *argv[])
 
     // Carrega o arquivo do terreno conforme o tamanho pre-definido
     loadTerrain(MAP_SIZE, &glHeightMap);
-
     GLint nAvgFrames = -1;
+    if(GLFW_MODE)
+    {
+      glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+      // Hide the mouse and enable unlimited mouvement
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+      // Set the mouse at the center of the screen
+      glfwPollEvents();
+      glfwSetCursorPos(window, 1024/2, 768/2);
+    }
     // Começa a animação, calcula o tempo inicial em milisegundos, começa o loop do GLUT e calcula o valor médio de frames por segundo
     if (roamInit(glHeightMap) == GL_ZERO)
     {
-      glAnimate = 1;
-      glStartTime = time(GL_ZERO);
-      glutMainLoop();
-      glEndTime = time(GL_ZERO);
-      nAvgFrames = (glFrames * 1000) / (glEndTime - glStartTime);
+      glAnimate = 0;
+      if(GLFW_MODE)
+      {
+        GLuint frameRate=0;
+        do
+        {
+          computeMatricesFromInputs(window);
+          glStartTime = glfwGetTime();
+          frameRate++;
+          sceneRenderer();
+          glEndTime = glfwGetTime();
+          if(glStartTime - glEndTime >= 1.0)
+          {
+            nAvgFrames = 1000.0/double(frameRate);
+            frameRate = 0;
+          }
+          glfwPollEvents();
+        }
+        while(glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
+              glfwWindowShouldClose(window) == 0 );
+      }
+      else
+      {
+        glStartTime = time(GL_ZERO);
+        glutMainLoop();
+        glEndTime = time(GL_ZERO);
+        nAvgFrames = (glFrames * 1000) / (glEndTime - glStartTime);
+      }
+
     }
 
     freeTerrain();
@@ -232,6 +295,8 @@ int main(int argc, char *argv[])
     glBitangentArray->clear();
     glUvArray->clear();
     terminateShader();
+    if(GLFW_MODE)
+      glfwTerminate();
     return nAvgFrames;
   }
   else
