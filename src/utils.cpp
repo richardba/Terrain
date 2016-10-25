@@ -18,10 +18,7 @@
 #include "../include/texture.h"
 
 /* Constantes responsáveis pelo modo da câmera */
-#define FOLLOW          (0)
 #define OBSERVE         (1)
-#define DRIVE           (2)
-#define FLY_MODE        (3)
 
 #define FAR_CLIP        (2500.0f)
 #define FOV_ANGLE       (90.0f)
@@ -61,8 +58,8 @@ GLfloat glCameraRotation[]	= {42.f, -181.f, ZERO_F};
 GLfloat glPerspective;
 GLfloat glViewPosition[]		= {ZERO_F, 5.f, ZERO_F};
 GLint glAnimate     = GL_ZERO;
-GLint glCamera      = DRIVE;
-GLint glDrawFrustum = 1;
+GLint glCamera      = OBSERVE;
+GLint glDrawFrustum = GL_ONE;
 GLint glDrawMode     = DRAW_USE_TEXTURE;
 GLint glFrames;
 float glFrameDiff = 50;
@@ -118,7 +115,7 @@ GLvoid shaderPlumbing()
 
 	// Load the texture
 	diffuseTexture [0] = loadDDS("diffuse.dds");
-	normalTexture  [0] = loadBMP_custom("normal.bmp");
+	normalTexture  [0] = loadBMP_custom("bump.bmp");
 	specularTexture[0] = loadDDS("specular.dds");
 
   diffuseTexture [1]  = glGetUniformLocation(shaderHandle.id(), "diffuseTextureSampler");
@@ -175,7 +172,7 @@ void shaderAttrib()
 		glUniformMatrix3fv(modelView3x3MatrixId, 1, GL_FALSE, &ModelView3x3Matrix[0][0]);
 
 
-		glm::vec3 lightPos = glm::vec3(0,4,0);
+		glm::vec3 lightPos = glm::vec3(0,10,0);
 		glUniform3f(glLightID, lightPos.x, lightPos.y, lightPos.z);
 
 		// Bind our diffuse texture in Texture Unit 0
@@ -390,41 +387,11 @@ void freeTerrain()
 */
 void drawMode()
 {
-    switch (glDrawMode)
-    {
-    case DRAW_USE_TEXTURE:
-        glDisable(GL_LIGHTING);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_TEXTURE_GEN_S);
-        glEnable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    case DRAW_USE_LIGHTING:
-        glEnable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    case DRAW_USE_FILL_ONLY:
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_FILL);
-        break;
-
-    default:
-    case DRAW_USE_WIREFRAME:
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glPolygonMode(GL_FRONT, GL_LINE);
-        break;
-    }
+    glDisable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    glPolygonMode(GL_FRONT, GL_FILL);
 }
 
 /**
@@ -486,6 +453,7 @@ void roamDrawFrame()
 */
 void drawFrustum()
 {
+
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_TEXTURE_GEN_S);
@@ -493,7 +461,7 @@ void drawFrustum()
 
     glPointSize(2.f);
     glLineWidth(3.f);
-
+    /*
     glBegin(GL_LINES);
 
     glColor3f(GL_ONE, GL_ZERO, GL_ZERO);
@@ -553,7 +521,7 @@ void drawFrustum()
                 (float)ptRightY);
 
     glEnd();
-
+    */
     glLineWidth(1.f);
     glColor3f(GL_ONE, GL_ONE, GL_ONE);
 
@@ -582,12 +550,7 @@ void mouseWheel(GLint button, GLint dir, GLint x, GLint y)
 */
 void cameraMode(void)
 {
-    glCamera++;
-    if ( glCamera > FLY_MODE )
-        glCamera = FOLLOW;
 
-    if (glCamera == FOLLOW)
-        glAnimate = GL_ONE;
 }
 
 void renderMode(void)
@@ -604,37 +567,7 @@ void renderMode(void)
 */
 void KeyForward(void)
 {
-    switch ( glCamera )
-    {
-    default:
-    case FOLLOW:
-        break;
-
-    case OBSERVE:
-        glCameraPos[2] += 5.0f;
-        break;
-
-    case DRIVE:
-        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-        glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-
-        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
-        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
-
-        if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
-        if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
-
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
-        break;
-
-    case FLY_MODE:
-        glViewPosition[0] += 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                                   * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[2] -= 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                             * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[1] -= 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        break;
-    }
+    glCameraPos[2] += 5.0f;
 }
 
 /**
@@ -642,8 +575,7 @@ void KeyForward(void)
 */
 void KeyLeft(void)
 {
-    if ( glCamera == OBSERVE )
-        glCameraRotation[1] -= 5.0f;
+    glCameraRotation[1] -= 5.0f;
 }
 
 /**
@@ -651,37 +583,7 @@ void KeyLeft(void)
 */
 void KeyBackward(void)
 {
-    switch ( glCamera )
-    {
-    default:
-    case FOLLOW:
-        break;
-
-    case OBSERVE:
-        glCameraPos[2] -= 5.0f;
-        break;
-
-    case DRIVE:
-        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-        glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW] * M_PI / 180.0f );
-
-        if ( glViewPosition[0] > MAP_SIZE ) glViewPosition[0] = MAP_SIZE;
-        if ( glViewPosition[0] < GL_ZERO) glViewPosition[0] = GL_ZERO;
-
-        if ( glViewPosition[2] > MAP_SIZE ) glViewPosition[2] = MAP_SIZE;
-        if ( glViewPosition[2] < GL_ZERO) glViewPosition[2] = GL_ZERO;
-
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
-        break;
-
-    case FLY_MODE:
-        glViewPosition[0] -= 5.0f * sinf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                                   * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[2] += 5.0f * cosf( glCameraRotation[ROTATE_YAW]   * M_PI / 180.0f )
-                             * cosf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        glViewPosition[1] += 5.0f * sinf( glCameraRotation[ROTATE_PITCH] * M_PI / 180.0f );
-        break;
-    }
+    glCameraPos[2] -= 5.0f;
 }
 
 /**
@@ -689,8 +591,7 @@ void KeyBackward(void)
 */
 void KeyRight(void)
 {
-    if ( glCamera == OBSERVE )
-        glCameraRotation[1] += 5.0f;
+    glCameraRotation[1] += 5.0f;
 }
 
 void animateToggle(void)
@@ -780,60 +681,36 @@ void renderScene(void)
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
-    switch (glCamera)
-    {
-    default:
-    case FOLLOW:
-        glRotatef(-glAnimationAngle,ZERO_F, 1.f,ZERO_F);
-        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
+    glTranslatef(0.f, glCameraPos[1], glCameraPos[2]);
 
-        glPerspective = -glAnimationAngle;
-        break;
+    glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
+    glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
 
-    case OBSERVE:
+    glTranslatef(-((GLfloat) MAP_SIZE * .5f), .0f, -((GLfloat) MAP_SIZE * .5f));
 
-        glTranslatef(0.f, glCameraPos[1], glCameraPos[2]);
+    glPerspective = -glAnimationAngle;
 
-        glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
-        glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
-
-        glTranslatef(-((GLfloat) MAP_SIZE * .5f), .0f, -((GLfloat) MAP_SIZE * .5f));
-
-        glPerspective = -glAnimationAngle;
-        break;
-
-    case DRIVE:
-    case FLY_MODE:
-        glAnimate = GL_ZERO;
-
-        glRotatef(glCameraRotation[ROTATE_PITCH], 1.f, .0f, .0f);
-        glRotatef(glCameraRotation[ROTATE_YAW],   .0f, 1.f, .0f);
-
-        glTranslatef(-glViewPosition[0], -glViewPosition[1], -glViewPosition[2]);
-
-        glPerspective = glCameraRotation[ROTATE_YAW];
-        break;
-    }
     roamDrawFrame();
 
     if ( glDrawFrustum )
-        drawFrustum();
+    {
+      drawFrustum();
+    }
 
     glPopMatrix();
 
     glFrames++;
 
-    glPrint(10, 10, "Arrows keys to move around");
-    glPrint(10, 30, "A - Animate screen");
-    glPrint(10, 50, "C - Camera mode");
-    glPrint(10, 70, "W - Render mode");
-    glPrint(10, 90, "R - Toggle frustrum");
+//    glPrint(10, 10, "Arrows keys to move around");
+//    glPrint(10, 30, "A - Animate screen");
+//    glPrint(10, 50, "C - Camera mode");
+//    glPrint(10, 70, "W - Render mode");
+//    glPrint(10, 90, "R - Toggle frustrum");
 }
 
 void mouseMove(GLint mouseX, GLint mouseY)
 {
-    if ( glRotate &&
-            (glCamera != FOLLOW))
+    if ( glRotate )
     {
         GLint dx, dy;
 
@@ -864,10 +741,10 @@ void idleFn(void)
     {
         glAnimationAngle = glAnimationAngle + 0.4f;
 
-        glViewPosition[0] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
-        glViewPosition[2] = ((GLfloat) MAP_SIZE / 4.f) + ((cosf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
+        //glViewPosition[0] = ((GLfloat) MAP_SIZE / 4.f) + ((sinf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
+        //glViewPosition[2] = ((GLfloat) MAP_SIZE / 4.f) + ((cosf(glAnimationAngle * M_PI / 180.f) + 1.f) * ((GLfloat) MAP_SIZE / 4.f));
 
-        glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
+        //glViewPosition[1] = (MULT_SCALE * glHeightMap[(GLint)glViewPosition[0] + ((GLint)glViewPosition[2] * MAP_SIZE)]) + 4.0f;
     }
 }
 

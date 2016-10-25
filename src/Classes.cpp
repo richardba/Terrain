@@ -18,6 +18,7 @@
 #include <math.h>
 #include <gl/gl.h>
 #include <iostream>
+#include <stdio.h>
 #include <cstdlib>
 #include <climits>
 #include "../include/Terrain.h"
@@ -331,10 +332,10 @@ void Patch::SetVisibility(GLint eyeX, GLint eyeY, GLint leftX, GLint leftY, GLin
     GLint patchCenterX = patchWorldX + MESH_SIZE / 2;
     GLint patchCenterY = patchWorldY + MESH_SIZE / 2;
 
-    isPatchVisible =
-        (orientation(eyeX, eyeY, rightX, rightY, patchCenterX, patchCenterY) <
-         GL_ZERO) &&
-        (orientation(leftX, leftY, eyeX, eyeY, patchCenterX, patchCenterY) < GL_ZERO);
+    isPatchVisible = 1;
+//        (orientation(eyeX, eyeY, rightX, rightY, patchCenterX, patchCenterY) <
+//         GL_ZERO) &&
+//        (orientation(leftX, leftY, eyeX, eyeY, patchCenterX, patchCenterY) < GL_ZERO);
 }
 
 void Patch::Tessellate()

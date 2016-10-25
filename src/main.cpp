@@ -53,16 +53,16 @@ void keyMap(unsigned char key, GLint x, GLint y)
   switch (key)
   {
     case 'a':
-      animateToggle();
+      //animateToggle();
       break;
     case 'c':
-      cameraMode();
+      //cameraMode();
       break;
     case 'w':
-      renderMode();
+      //renderMode();
       break;
     case 'r':
-      frustrumToggle();
+      //frustrumToggle();
       break;
 
     case '+':
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
     // Começa a animação, calcula o tempo inicial em milisegundos, começa o loop do GLUT e calcula o valor médio de frames por segundo
     if (roamInit(glHeightMap) == GL_ZERO)
     {
-      glAnimate = 1;
+      glAnimate = 0;
       glStartTime = time(GL_ZERO);
       glutMainLoop();
       glEndTime = time(GL_ZERO);
