@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,6 +96,9 @@ glm::mat4 ProjectionMatrix;
 glm::mat4 ModelMatrix = glm::mat4(1.0);
 glm::mat4 ModelViewMatrix;
 glm::mat3 ModelView3x3Matrix;
+glm::vec3 cameraPosition = glm::vec3(2, 2.5, 2.0);
+glm::vec4 clearColor = glm::vec4(.40f, .53f, .60f, 1.0f);
+
 glm::mat4 MVP;
 float glFoVX = 90.0f;
 long glEndTime;
@@ -592,6 +596,7 @@ void KeyForward(void)
 void KeyLeft(void)
 {
     glCameraRotation[1] -= 5.0f;
+    ViewMatrix = glm::rotate(ViewMatrix, glCameraRotation[1], glm::vec3(0.0, 0.5, 0.0));
 }
 
 /**
@@ -608,6 +613,7 @@ void KeyBackward(void)
 void KeyRight(void)
 {
     glCameraRotation[1] += 5.0f;
+    ViewMatrix = glm::rotate(ViewMatrix, glCameraRotation[1], glm::vec3(0.0, 0.5, 0.0));
 }
 
 void animateToggle(void)
@@ -648,6 +654,7 @@ void toggleLessDetail(void)
 
 void changeSize(GLsizei w, GLsizei h)
 {
+    ProjectionMatrix = glm::perspective(glm::radians(glFoVX), (GLfloat)w / (GLfloat)h, 0.1f, 100.0f);
     GLfloat fAspect;
     if(h == GL_ZERO)
         h = 1;
@@ -783,7 +790,12 @@ void SetupRC()
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 
-    glClearColor( .40f, .53f, .60f, 1.0f );
+    glClearColor(
+                 clearColor.x,
+                 clearColor.y,
+                 clearColor.z,
+                 clearColor.w
+                 );
 
     GLfloat  whiteLight[]    = { .45f,  .45f, .45f, 1.f };
     GLfloat  ambientLight[]  = { .25f,  .25f, .25f, 1.f };
