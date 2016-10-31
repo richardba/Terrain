@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1477872421 source:c:\users\richardba\workspace\ogl\tutorial13_normal_mapping\tutorial13.cpp
+	<stdio.h>
+	<stdlib.h>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<common/shader.hpp>
+	<common/texture.hpp>
+	<common/controls.hpp>
+	<common/objloader.hpp>
+	<common/vboindexer.hpp>
+	<common/tangentspace.hpp>
+
