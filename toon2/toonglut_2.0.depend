@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1477919189 source:c:\users\richardba\workspace\toonglut_2.0\ogl3.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	"textfile.h"
+
+1105252696 c:\users\richardba\workspace\toonglut_2.0\textfile.h
+
+1477919966 source:c:\users\richardba\workspace\toonglut_2.0\textfile.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
