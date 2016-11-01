@@ -1,6 +1,4 @@
-
-
-varying vec3 lightDir,normal;
+varying vec3 viewDir,lightDir,normal;
 
 void main()
 {

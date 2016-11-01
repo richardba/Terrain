@@ -1,0 +1,137 @@
+# depslib dependency file v1.0
+1477955142 source:c:\users\richardba\workspace\roaming\toon\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<common/shader.hpp>
+	<common/texture.hpp>
+	<common/controls.hpp>
+	<common/objloader.hpp>
+	<common/vboindexer.hpp>
+	<common/tangentspace.hpp>
+
+1477419819 source:c:\users\richardba\workspace\roaming\toon\src\classes.cpp
+	<windows.h>
+	<math.h>
+	<gl/gl.h>
+	<iostream>
+	<stdio.h>
+	<cstdlib>
+	<climits>
+	"../include/Terrain.h"
+	"../include/Vbo.h"
+	"../include/utils.h"
+
+1477433297 c:\users\richardba\workspace\roaming\toon\include\terrain.h
+	"../include/Patch.h"
+
+1475089049 c:\users\richardba\workspace\roaming\toon\include\patch.h
+
+1476117825 c:\users\richardba\workspace\roaming\toon\include\vbo.h
+	<vector>
+	<glm/glm.hpp>
+
+1477961366 c:\users\richardba\workspace\roaming\toon\include\utils.h
+	<vector>
+	<glm/glm.hpp>
+
+1477960943 source:c:\users\richardba\workspace\roaming\toon\src\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	"../include/Shader.h"
+	"../include/Texture.h"
+	"../include/Controls.h"
+	"../include/Objloader.h"
+	"../include/Vboindexer.h"
+	"../include/Tangentspace.h"
+
+1475695726 c:\users\richardba\workspace\roaming\toon\include\shader.h
+
+1475695726 c:\users\richardba\workspace\roaming\toon\include\texture.h
+
+1475784172 c:\users\richardba\workspace\roaming\toon\include\controls.h
+
+1475695726 c:\users\richardba\workspace\roaming\toon\include\objloader.h
+
+1475695726 c:\users\richardba\workspace\roaming\toon\include\vboindexer.h
+
+1475695726 c:\users\richardba\workspace\roaming\toon\include\tangentspace.h
+
+1477961173 source:c:\users\richardba\workspace\roaming\toon\src\controls.cpp
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	"../include/Controls.h"
+
+1477961182 source:c:\users\richardba\workspace\roaming\toon\src\objloader.cpp
+	<vector>
+	<stdio.h>
+	<string>
+	<cstring>
+	<glm/glm.hpp>
+	"../include/Objloader.h"
+	<assimp/Importer.hpp>
+	<assimp/scene.h>
+	<assimp/postprocess.h>
+
+1477961210 source:c:\users\richardba\workspace\roaming\toon\src\shader.cpp
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<algorithm>
+	<stdlib.h>
+	<string.h>
+	<GL/glew.h>
+	"../include/Shader.h"
+
+1477961509 source:c:\users\richardba\workspace\roaming\toon\src\tangentspace.cpp
+	<vector>
+	<glm/glm.hpp>
+	"../include/Tangentspace.h"
+
+1475773014 source:c:\users\richardba\workspace\roaming\toon\src\texture.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+
+1477961573 source:c:\users\richardba\workspace\roaming\toon\src\utils.cpp
+	<GL/glew.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<iostream>
+	<vector>
+	<ctime>
+	<glm/gtc/matrix_transform.hpp>
+	<GLFW/glfw3.h>
+	"../include/utils.h"
+	"../include/Terrain.h"
+	"../include/Vbo.h"
+	"../include/Shader.h"
+	"../include/texture.h"
+
+1477961508 source:c:\users\richardba\workspace\roaming\toon\src\vboindexer.cpp
+	<vector>
+	<map>
+	<glm/glm.hpp>
+	"../include/Vboindexer.h"
+	<string.h>
+

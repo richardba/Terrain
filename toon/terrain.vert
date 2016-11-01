@@ -12,6 +12,7 @@ out vec2 UV;
 out vec3 Position_worldspace;
 out vec3 EyeDirection_cameraspace;
 out vec3 LightDirection_cameraspace;
+out float height;
 
 out vec3 LightDirection_tangentspace;
 out vec3 EyeDirection_tangentspace;
@@ -27,6 +28,7 @@ uniform float offset;
 void main(){
 	// Output position of the vertex, in clip space : MVP * position
 	gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
+  height = vertexPosition_modelspace.y/10;
 	
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (M * vec4(vertexPosition_modelspace,1)).xyz;

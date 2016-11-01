@@ -13,3 +13,26 @@
 	<stdlib.h>
 	<string.h>
 
+1477928967 source:c:\users\richardba\workspace\roaming\toon2\textfile.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1477932539 source:c:\users\richardba\workspace\roaming\toon2\ogl3.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	<string>
+	"textfile.h"
+
+1477928967 c:\users\richardba\workspace\roaming\toon2\textfile.h
+
+1477939167 source:c:\users\richardba\workspace\roaming\toon2\main.cpp
+	<GL/glew.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	<string>
+	"textfile.h"
+
